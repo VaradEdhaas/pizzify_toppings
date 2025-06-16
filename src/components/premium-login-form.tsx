@@ -1,41 +1,70 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { useRouter } from "next/navigation"
-import { Button, Input } from "@nextui-org/react"
-import { EyeFilledIcon, EyeSlashFilledIcon } from "@nextui-org/shared-icons"
-import { Mail, Lock, Smartphone, ArrowRight } from "lucide-react"
-import { login } from "@/app/login/actions"
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { Button, Input } from "@nextui-org/react";
+import { EyeFilledIcon, EyeSlashFilledIcon } from "@nextui-org/shared-icons";
+import { Mail, Lock, Smartphone, ArrowRight } from "lucide-react";
+import apiService from "@/helper/apiService";
+import { useFormik } from "formik";
+import * as Yup from "yup";
+import { addToast } from "@heroui/toast";
 
 export function LoginForm() {
-    const [isLoading, setIsLoading] = useState(false)
-    const [error, setError] = useState("")
-    const [isVisible, setIsVisible] = useState(false)
-    const router = useRouter()
+    const [isVisible, setIsVisible] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState("");
+    const router = useRouter();
 
-    const toggleVisibility = () => setIsVisible(!isVisible)
+    const toggleVisibility = () => setIsVisible(!isVisible);
 
-    async function onSubmit(formData: FormData) {
-        setIsLoading(true)
-        setError("")
+    const formik = useFormik({
+        initialValues: {
+            email: "",
+            password: ""
+        },
+        validationSchema: Yup.object({
+            email: Yup.string().email("Invalid email address").required("Email is required"),
+            password: Yup.string().required("Password is required")
+        }),
+        onSubmit: async (values) => {
+            setIsLoading(true);
+            setError("");
 
-        try {
-            const result = await login(formData)
-            if (result?.error) {
-                setError(result.error)
-            } else {
-                router.push("/dashboard")
+            try {
+                const response = await apiService.loginUser({
+                    email: values.email,
+                    password: values.password
+                });
+
+                // You can store token or user in localStorage or context if needed
+                // localStorage.setItem("currentUser", JSON.stringify(response));
+
+                // Example: handle AuthContext here if you want
+                // setCurrentUser(response);
+
+                addToast({
+                    title: "Success",
+                    description: "Welcome to pizzify, logged in successfull",
+                    color: "success",
+                })
+
+                router.push("/dashboard");
+            } catch (err: any) {
+                addToast({
+                title: "Error",
+                description: "An unexpected error occurred. Please try again.",
+                color: "success",
+            })
+            } finally {
+                setIsLoading(false);
             }
-        } catch (error) {
-            setError("An unexpected error occurred. Please try again.")
-        } finally {
-            setIsLoading(false)
         }
-    }
+    });
 
     return (
-        <form action={onSubmit} className="space-y-8">
-            {/* Email Field */}
+        <form onSubmit={formik.handleSubmit} className="space-y-8">
+
             <Input
                 name="email"
                 type="email"
@@ -54,16 +83,20 @@ export function LoginForm() {
                         "focus-visible:outline-none",
                         "!cursor-text",
                         "h-14",
-                        "rounded-2xl",
+                        "rounded-md",
                         "border",
-                        "p-3"
+                        "p-3",
+                        "my-0"
                     ],
                 }}
                 disabled={isLoading}
                 required
+                value={formik.values.email}
+                onChange={formik.handleChange}
+                isInvalid={formik.touched.email && !!formik.errors.email}
+                errorMessage={formik.touched.email && formik.errors.email}
             />
 
-            {/* Password Field */}
             <div className="space-y-3">
                 <Input
                     name="password"
@@ -92,13 +125,18 @@ export function LoginForm() {
                             "focus-visible:outline-none",
                             "!cursor-text",
                             "h-14",
-                            "rounded-2xl",
+                            "rounded-md",
                             "border",
-                            "p-3"
+                            "p-3",
+                            "my-0"
                         ],
                     }}
                     disabled={isLoading}
                     required
+                    value={formik.values.password}
+                    onChange={formik.handleChange}
+                    isInvalid={formik.touched.password && !!formik.errors.password}
+                    errorMessage={formik.touched.password && formik.errors.password}
                 />
 
                 <div className="text-right">
@@ -117,7 +155,6 @@ export function LoginForm() {
                 </div>
             )}
 
-            {/* Sign In Button */}
             <Button
                 type="submit"
                 isLoading={isLoading}
@@ -128,7 +165,6 @@ export function LoginForm() {
                 {isLoading ? "Signing in..." : "Sign in"}
             </Button>
 
-            {/* Divider */}
             <div className="relative my-4">
                 <div className="absolute inset-0 flex items-center">
                     <div className="w-full border-t border-white/[0.1]"></div>
@@ -138,7 +174,6 @@ export function LoginForm() {
                 </div>
             </div>
 
-            {/* Alternative Options */}
             <div className="space-y-4">
                 <Button
                     type="button"
@@ -162,5 +197,5 @@ export function LoginForm() {
                 </Button>
             </div>
         </form>
-    )
+    );
 }

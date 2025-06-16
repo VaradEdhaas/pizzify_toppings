@@ -18,9 +18,9 @@ export default function SignupPage() {
 
       <div className="relative z-10 flex min-h-screen">
         {/* Left Panel - Signup Form */}
-        <div className="w-full lg:w-1/2 flex items-center justify-center px-8 py-12">
-          <div className="w-full max-w-sm">
-            <div className="backdrop-blur-xl bg-white/[0.02] rounded-2xl p-8 border border-white/[0.08] shadow-2xl">
+        <div className="w-full lg:w-3/5 flex items-center justify-center px-8 py-4">
+          <div className="w-full max-w-lg"> {/* increased from max-w-sm to max-w-lg */}
+            <div className="backdrop-blur-xl bg-white/[0.02] rounded-2xl p-4 border border-white/[0.08] shadow-2xl">
               <div className="text-center mb-8">
                 <h3 className="text-2xl font-light text-white mb-2">Join Pizzify</h3>
                 <p className="text-neutral-400 text-sm font-light">Create your account and start ordering</p>
@@ -44,8 +44,8 @@ export default function SignupPage() {
         </div>
 
         {/* Right Panel - Restaurant Features */}
-        <div className="hidden lg:flex lg:w-1/2 relative">
-          <div className="flex flex-col justify-center px-16 py-24 w-full">
+        <div className="hidden lg:flex lg:w-2/5 relative"> {/* changed from lg:w-1/2 to lg:w-2/5 */}
+          <div className="flex flex-col justify-center px-16 py-14 w-full">
             <div className="max-w-md">
               <h2 className="text-5xl font-light text-white mb-8 leading-tight tracking-tight">
                 Join our

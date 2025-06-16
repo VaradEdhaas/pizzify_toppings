@@ -1,22 +1,19 @@
 "use server"
 
-import { revalidatePath } from "next/cache"
-import { redirect } from "next/navigation"
+import apiService from "@/helper/apiService"
 
 export async function login(formData: FormData) {
-  const email = formData.get("email") as string
-  const password = formData.get("password") as string
+  const email = formData.get("email")?.toString() || ""
+  const password = formData.get("password")?.toString() || ""
 
-  // Basic validation
   if (!email || !password) {
     return { error: "Email and password are required" }
   }
 
-  // Demo authentication for Pizzify
-  if (email === "demo@pizzify.com" && password === "password") {
-    revalidatePath("/", "layout")
-    redirect("/dashboard")
-  } else {
-    return { error: "Invalid credentials" }
+  try {
+    const user = await apiService.loginUser({ email, password })
+    return user
+  } catch (error: any) {
+    return { error: error?.response?.data?.message || "Something went wrong" }
   }
 }

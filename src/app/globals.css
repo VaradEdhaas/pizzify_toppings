@@ -109,4 +109,11 @@ body {
   .animation-delay-4000 {
     animation-delay: 4s;
   }
+
+  .select-none {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+  }
 }

@@ -3,6 +3,8 @@ import type { Metadata } from "next"
 import { Inter } from "next/font/google"
 import { NextUIProvider } from "@nextui-org/react"
 import "./globals.css"
+import { AuthProvider } from "@/components/context/AuthContext"
+import Providers from "./provider"
 
 const inter = Inter({ subsets: ["latin"] })
 
@@ -19,7 +21,13 @@ export default function RootLayout({
   return (
     <html lang="en" className="dark">
       <body className={inter.className}>
-        <NextUIProvider>{children}</NextUIProvider>
+        <NextUIProvider>
+          <AuthProvider>
+            <Providers>
+              {children}
+            </Providers>
+          </AuthProvider>
+        </NextUIProvider>
       </body>
     </html>
   )
