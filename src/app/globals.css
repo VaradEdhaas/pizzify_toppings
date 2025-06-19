@@ -116,4 +116,9 @@ body {
     -ms-user-select: none;
     user-select: none;
   }
+
+  .writing-mode-vertical {
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+  }
 }
