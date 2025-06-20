@@ -1,10 +1,23 @@
+"use client";
+
 import Link from "next/link"
 import { Button } from "@nextui-org/react"
 import { Home, ArrowLeft, Search, Mail } from "lucide-react"
 import { GeometricBackground } from "@/components/geometric-background"
 import { FloatingElements } from "@/components/floating-elements"
+import { useRouter } from "next/navigation"
 
 export default function NotFound() {
+  const router = useRouter();
+
+  const handleGoBack = () => {
+    router.back()
+  }
+
+  const handleGoHome = () => {
+    router.push("/")
+  }
+
   return (
     <div className="min-h-screen relative overflow-hidden bg-gradient-to-br from-black via-neutral-950 to-black">
       <GeometricBackground />
@@ -51,91 +64,23 @@ export default function NotFound() {
           {/* Action Buttons */}
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16">
             <Button
-              as={Link}
-              href="/"
               className="w-full rounded-md sm:w-auto h-14 px-8 bg-white text-black hover:bg-neutral-100 font-normal transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98] text-base"
               radius="lg"
               startContent={<Home className="h-4 w-4" />}
+              onPress={handleGoHome}
             >
               Back to Home
             </Button>
 
             <Button
-              as={Link}
-              href="/login"
               variant="flat"
               className="w-full rounded-md sm:w-auto h-14 px-8 bg-white/[0.03] border border-white/[0.1] text-white hover:bg-white/[0.05] transition-all duration-300 font-light text-base"
               radius="lg"
               startContent={<ArrowLeft className="h-4 w-4" />}
+              onPress={handleGoBack}
             >
               Go Back
             </Button>
-          </div>
-
-          {/* Help Section */}
-          <div className="bg-white/[0.03] backdrop-blur-2xl rounded-3xl p-8 border border-white/[0.05] shadow-2xl max-w-2xl mx-auto">
-            <h4 className="text-xl font-light text-white mb-6">Need Help?</h4>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="text-center">
-                <div className="w-12 h-12 bg-white/[0.05] rounded-2xl flex items-center justify-center mx-auto mb-4 border border-white/[0.1]">
-                  <Search className="h-5 w-5 text-white/60" />
-                </div>
-                <h5 className="text-white font-normal mb-2">Search Our Menu</h5>
-                <p className="text-sm text-neutral-400 font-light leading-relaxed">
-                  Browse our delicious pizza selection and find your perfect meal.
-                </p>
-                <Button
-                  as={Link}
-                  href="/menu"
-                  variant="flat"
-                  size="sm"
-                  className="mt-3 px-2.5 rounded-md bg-white/[0.05] border border-white/[0.1] text-white hover:bg-white/[0.08] font-light"
-                  radius="lg"
-                >
-                  View Menu
-                </Button>
-              </div>
-
-              <div className="text-center">
-                <div className="w-12 h-12 bg-white/[0.05] rounded-2xl flex items-center justify-center mx-auto mb-4 border border-white/[0.1]">
-                  <Mail className="h-5 w-5 text-white/60" />
-                </div>
-                <h5 className="text-white font-normal mb-2">Contact Support</h5>
-                <p className="text-sm text-neutral-400 font-light leading-relaxed">
-                  Our team is here to help you with any questions or concerns.
-                </p>
-                <Button
-                  as={Link}
-                  href="/contact"
-                  variant="flat"
-                  size="sm"
-                  className="mt-3 px-2.5 rounded-md bg-white/[0.05] border border-white/[0.1] text-white hover:bg-white/[0.08] font-light"
-                  radius="lg"
-                >
-                  Get Help
-                </Button>
-              </div>
-            </div>
-          </div>
-
-          {/* Footer Links */}
-          <div className="mt-12 flex flex-wrap items-center justify-center gap-6 text-sm text-neutral-500">
-            <Link href="/menu" className="hover:text-white transition-colors duration-300 font-light">
-              Menu
-            </Link>
-            <span className="w-1 h-1 bg-neutral-600 rounded-full"></span>
-            <Link href="/about" className="hover:text-white transition-colors duration-300 font-light">
-              About
-            </Link>
-            <span className="w-1 h-1 bg-neutral-600 rounded-full"></span>
-            <Link href="/contact" className="hover:text-white transition-colors duration-300 font-light">
-              Contact
-            </Link>
-            <span className="w-1 h-1 bg-neutral-600 rounded-full"></span>
-            <Link href="/help" className="hover:text-white transition-colors duration-300 font-light">
-              Help
-            </Link>
           </div>
         </div>
       </div>

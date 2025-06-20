@@ -1,72 +1,76 @@
 "use client"
-
-import { useState } from "react"
-import { useRouter } from "next/navigation"
-import { Button, Input } from "@nextui-org/react"
-import { EyeFilledIcon, EyeSlashFilledIcon } from "@nextui-org/shared-icons"
-import { Mail, Lock, Smartphone, ArrowRight } from "lucide-react"
-import { useToast } from "@heroui/react"
-import { login } from "@/app/login/actions"
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { Button, Input } from "@nextui-org/react";
+import { EyeFilledIcon, EyeSlashFilledIcon } from "@nextui-org/shared-icons";
+import { Mail, Lock, Smartphone, ArrowRight } from "lucide-react";
+import apiService from "@/helper/apiService";
+import { useFormik } from "formik";
+import * as Yup from "yup";
+import { toast } from 'react-toastify'
+import { useAuth } from "./context/AuthContext";
 
 export function LoginForm() {
-  const [isLoading, setIsLoading] = useState(false)
-  const [isVisible, setIsVisible] = useState(false)
-  const router = useRouter()
-  const toast = useToast()
+  const [isVisible, setIsVisible] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
+  const router = useRouter();
+  const { setCurrentUser } = useAuth();
 
-  const toggleVisibility = () => setIsVisible(!isVisible)
+  const toggleVisibility = () => setIsVisible(!isVisible);
 
-  async function onSubmit(formData: FormData) {
-    setIsLoading(true)
+  const formik = useFormik({
+    initialValues: {
+      email: "",
+      password: ""
+    },
+    validationSchema: Yup.object({
+      email: Yup.string().email("Invalid email address").required("Email is required"),
+      password: Yup.string().required("Password is required")
+    }),
+    onSubmit: async (values) => {
+      setIsLoading(true);
+      setError("");
 
-    try {
-      const result = await login(formData)
-      if (result?.error) {
-        toast.error(result.error, {
-          title: "Sign in failed",
-          classNames: {
-            base: "bg-red-500/10 border-red-500/20 backdrop-blur-xl",
-            title: "text-red-400 font-normal",
-            description: "text-red-300 font-light",
-            closeButton: "text-red-400 hover:text-red-300",
-          },
-        })
-      } else {
-        toast.success("Successfully signed in to your account", {
-          title: "Welcome back!",
-          classNames: {
-            base: "bg-green-500/10 border-green-500/20 backdrop-blur-xl",
-            title: "text-green-400 font-normal",
-            description: "text-green-300 font-light",
-            closeButton: "text-green-400 hover:text-green-300",
-          },
-        })
-        router.push("/dashboard")
+      try {
+        const response = await apiService.loginUser({
+          email: values.email,
+          password: values.password
+        });
+
+        // You can store token or user in localStorage or context if needed
+        // localStorage.setItem("currentUser", JSON.stringify(response));
+
+        // Example: handle AuthContext here if you want
+        // setCurrentUser(response);
+        toast.success("Welcome to pizzify, logged in successfull")
+        setCurrentUser({
+          token: response.token,
+          user: {
+            _id: response.user.id,
+            name: response.user.fullname,
+            email: response.user.email,
+            role: response.user.role,
+          }
+        });
+        router.push("/");
+      } catch (err: any) {
+        toast.error("An unexpected error occurred. Please try again.")
+      } finally {
+        setIsLoading(false);
       }
-    } catch (error) {
-      toast.error("An unexpected error occurred. Please try again.", {
-        title: "Something went wrong",
-        classNames: {
-          base: "bg-red-500/10 border-red-500/20 backdrop-blur-xl",
-          title: "text-red-400 font-normal",
-          description: "text-red-300 font-light",
-          closeButton: "text-red-400 hover:text-red-300",
-        },
-      })
-    } finally {
-      setIsLoading(false)
     }
-  }
+  });
 
   return (
-    <form action={onSubmit} className="space-y-8">
-      {/* Email Field */}
+    <form onSubmit={formik.handleSubmit} className="space-y-8">
+
       <Input
         name="email"
         type="email"
         placeholder="Enter your email"
         variant="flat"
-        startContent={<Mail className="h-4 w-4 text-neutral-500" />}
+        startContent={<Mail className="h-4 w-4 mx-3 text-neutral-500" />}
         classNames={{
           base: "w-full",
           mainWrapper: "h-full",
@@ -75,16 +79,22 @@ export function LoginForm() {
             "bg-white/[0.03]",
             "border-white/[0.1]",
             "hover:bg-white/[0.05]",
-            "focus-within:!bg-white/[0.05]",
-            "focus-within:!border-white/[0.2]",
+            "focus:outline-none",
+            "focus-visible:outline-none",
             "!cursor-text",
             "h-14",
-            "rounded-2xl",
+            "rounded-md",
             "border",
+            "p-3",
+            "my-0"
           ],
         }}
         disabled={isLoading}
         required
+        value={formik.values.email}
+        onChange={formik.handleChange}
+        isInvalid={formik.touched.email && !!formik.errors.email}
+        errorMessage={formik.touched.email && formik.errors.email}
       />
 
       {/* Password Field */}
@@ -93,7 +103,7 @@ export function LoginForm() {
           name="password"
           placeholder="Enter your password"
           variant="flat"
-          startContent={<Lock className="h-4 w-4 text-neutral-500" />}
+          startContent={<Lock className="h-4 w-4 mx-3 text-neutral-500" />}
           endContent={
             <button className="focus:outline-none" type="button" onClick={toggleVisibility}>
               {isVisible ? (
@@ -112,16 +122,22 @@ export function LoginForm() {
               "bg-white/[0.03]",
               "border-white/[0.1]",
               "hover:bg-white/[0.05]",
-              "focus-within:!bg-white/[0.05]",
-              "focus-within:!border-white/[0.2]",
+              "focus:outline-none",
+              "focus-visible:outline-none",
               "!cursor-text",
               "h-14",
-              "rounded-2xl",
+              "rounded-md",
               "border",
+              "p-3",
+              "my-0"
             ],
           }}
           disabled={isLoading}
           required
+          value={formik.values.password}
+          onChange={formik.handleChange}
+          isInvalid={formik.touched.password && !!formik.errors.password}
+          errorMessage={formik.touched.password && formik.errors.password}
         />
 
         <div className="text-right">
@@ -135,18 +151,24 @@ export function LoginForm() {
       </div>
 
       {/* Sign In Button */}
+      {error && (
+        <div className="bg-red-500/10 border border-red-500/20 text-red-400 p-4 rounded-2xl">
+          <p className="text-sm font-light">{error}</p>
+        </div>
+      )}
+
       <Button
         type="submit"
         isLoading={isLoading}
-        className="w-full h-14 bg-white text-black hover:bg-neutral-100 font-normal transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98] text-base"
-        radius="xl"
+        className="w-full h-14 bg-white text-black rounded-md hover:bg-neutral-100 font-normal transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98] text-base"
+        radius="lg"
         endContent={!isLoading && <ArrowRight className="h-4 w-4" />}
       >
         {isLoading ? "Signing in..." : "Sign in"}
       </Button>
 
       {/* Divider */}
-      <div className="relative my-8">
+      <div className="relative my-4">
         <div className="absolute inset-0 flex items-center">
           <div className="w-full border-t border-white/[0.1]"></div>
         </div>
@@ -160,9 +182,9 @@ export function LoginForm() {
         <Button
           type="button"
           variant="flat"
-          className="w-full h-14 bg-white/[0.03] border border-white/[0.1] text-white hover:bg-white/[0.05] transition-all duration-300 font-light text-base"
+          className="w-full h-14 bg-white/[0.03] border rounded-md border-white/[0.1] text-white hover:bg-white/[0.05] transition-all duration-300 font-light text-base"
           disabled={isLoading}
-          radius="xl"
+          radius="lg"
           startContent={<Smartphone className="h-4 w-4" />}
         >
           Continue with Phone
@@ -171,13 +193,13 @@ export function LoginForm() {
         <Button
           type="button"
           variant="flat"
-          className="w-full h-14 bg-white/[0.03] border border-white/[0.1] text-white hover:bg-white/[0.05] transition-all duration-300 font-light text-base"
+          className="w-full h-14 bg-white/[0.03] border rounded-md border-white/[0.1] text-white hover:bg-white/[0.05] transition-all duration-300 font-light text-base"
           disabled={isLoading}
-          radius="xl"
+          radius="lg"
         >
           Guest Checkout
         </Button>
       </div>
     </form>
-  )
+  );
 }

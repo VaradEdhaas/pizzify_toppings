@@ -3,20 +3,34 @@
 import { useState } from "react"
 import { Button, Input, Checkbox, Progress } from "@nextui-org/react"
 import { EyeFilledIcon, EyeSlashFilledIcon } from "@nextui-org/shared-icons"
-import { User, Mail, Phone, Lock, Smartphone, ArrowRight } from "lucide-react"
-import { useToast } from "@heroui/react"
-import { signup } from "@/app/signup/actions"
+import { User, Mail, Phone, Lock, Check, ArrowRight } from "lucide-react"
+import { toast } from 'react-toastify'
+import { Formik, Form, ErrorMessage } from "formik"
+import * as Yup from "yup"
+import { useAuth } from "./context/AuthContext"
+import apiService from "@/helper/apiService"
+
+const SignupSchema = Yup.object().shape({
+  fullname: Yup.string().required("Full name is required"),
+  email: Yup.string().email("Invalid email").required("Email is required"),
+  password: Yup.string().min(8, "Password must be at least 8 characters").required("Password is required"),
+  phone: Yup.string().required("Phone number is required"),
+  address: Yup.string().required("Address is required"),
+  city: Yup.string().required("City is required"),
+  zipcode: Yup.string().required("Zipcode is required"),
+  terms: Yup.boolean().oneOf([true], "You must accept terms and conditions"),
+})
+
 
 export function SignupForm() {
-  const [isLoading, setIsLoading] = useState(false)
   const [isVisible, setIsVisible] = useState(false)
-  const [isConfirmVisible, setIsConfirmVisible] = useState(false)
-  const [password, setPassword] = useState("")
   const [passwordStrength, setPasswordStrength] = useState(0)
-  const toast = useToast()
+  const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState("")
+  const [success, setSuccess] = useState("")
+  const { setCurrentUser } = useAuth();
 
   const toggleVisibility = () => setIsVisible(!isVisible)
-  const toggleConfirmVisibility = () => setIsConfirmVisible(!isConfirmVisible)
 
   const calculatePasswordStrength = (pwd: string) => {
     let strength = 0
@@ -27,320 +41,256 @@ export function SignupForm() {
     return strength
   }
 
-  const handlePasswordChange = (value: string) => {
-    setPassword(value)
-    setPasswordStrength(calculatePasswordStrength(value))
-  }
-
-  async function onSubmit(formData: FormData) {
+  const handleSubmit = async (values: any, { resetForm }: any) => {
     setIsLoading(true)
-
+    setError("")
+    setSuccess("")
     try {
-      const result = await signup(formData)
-      if (result?.error) {
-        toast.error(result.error, {
-          title: "Account creation failed",
-          classNames: {
-            base: "bg-red-500/10 border-red-500/20 backdrop-blur-xl",
-            title: "text-red-400 font-normal",
-            description: "text-red-300 font-light",
-            closeButton: "text-red-400 hover:text-red-300",
-          },
-        })
-      } else {
-        toast.success("Your account has been created successfully", {
-          title: "Welcome to Pizzify! 🍕",
-          classNames: {
-            base: "bg-green-500/10 border-green-500/20 backdrop-blur-xl",
-            title: "text-green-400 font-normal",
-            description: "text-green-300 font-light",
-            closeButton: "text-green-400 hover:text-green-300",
-          },
-        })
-      }
-    } catch (error) {
-      toast.error("An unexpected error occurred. Please try again.", {
-        title: "Something went wrong",
-        classNames: {
-          base: "bg-red-500/10 border-red-500/20 backdrop-blur-xl",
-          title: "text-red-400 font-normal",
-          description: "text-red-300 font-light",
-          closeButton: "text-red-400 hover:text-red-300",
-        },
+      const response = await apiService.createUser({
+        fullname: values.fullname,
+        email: values.email,
+        password: values.password,
+        phone: values.phone,
+        address: values.address,
+        city: values.city,
+        zipcode: values.zipcode,
       })
+      toast.success("Your account has been created successfully",)
+      setCurrentUser({
+        token: response.token,
+        user: {
+          _id: response.user.id,
+          name: response.user.fullname,
+          email: response.user.email,
+          role: response.user.role,
+        }
+      });
+      resetForm()
+    } catch (err: any) {
+      toast.error("An unexpected error occurred. Please try again.")
     } finally {
       setIsLoading(false)
     }
   }
 
   return (
-    <form action={onSubmit} className="space-y-6">
-      {/* Name Fields */}
-      <div className="grid grid-cols-2 gap-4">
-        <Input
-          name="firstName"
-          placeholder="First name"
-          variant="flat"
-          startContent={<User className="h-4 w-4 text-neutral-500" />}
-          classNames={{
-            base: "w-full",
-            mainWrapper: "h-full",
-            input: ["bg-transparent", "text-white", "placeholder:text-neutral-500", "text-base", "font-light"],
-            inputWrapper: [
-              "bg-white/[0.03]",
-              "border-white/[0.1]",
-              "hover:bg-white/[0.05]",
-              "focus-within:!bg-white/[0.05]",
-              "focus-within:!border-white/[0.2]",
-              "!cursor-text",
-              "h-14",
-              "rounded-2xl",
-              "border",
-            ],
-          }}
-          disabled={isLoading}
-          required
-        />
+    <Formik
+      initialValues={{
+        fullname: "",
+        email: "",
+        password: "",
+        phone: "",
+        address: "",
+        city: "",
+        zipcode: "",
+        terms: false,
+        marketing: false,
+      }}
+      validationSchema={SignupSchema}
+      onSubmit={handleSubmit}
+    >
+      {({ values, handleChange, handleBlur, setFieldValue }) => (
+        <Form className="space-y-6">
 
-        <Input
-          name="lastName"
-          placeholder="Last name"
-          variant="flat"
-          classNames={{
-            base: "w-full",
-            mainWrapper: "h-full",
-            input: ["bg-transparent", "text-white", "placeholder:text-neutral-500", "text-base", "font-light"],
-            inputWrapper: [
-              "bg-white/[0.03]",
-              "border-white/[0.1]",
-              "hover:bg-white/[0.05]",
-              "focus-within:!bg-white/[0.05]",
-              "focus-within:!border-white/[0.2]",
-              "!cursor-text",
-              "h-14",
-              "rounded-2xl",
-              "border",
-            ],
-          }}
-          disabled={isLoading}
-          required
-        />
-      </div>
-
-      {/* Email Field */}
-      <Input
-        name="email"
-        type="email"
-        placeholder="Email address"
-        variant="flat"
-        startContent={<Mail className="h-4 w-4 text-neutral-500" />}
-        classNames={{
-          base: "w-full",
-          mainWrapper: "h-full",
-          input: ["bg-transparent", "text-white", "placeholder:text-neutral-500", "text-base", "font-light"],
-          inputWrapper: [
-            "bg-white/[0.03]",
-            "border-white/[0.1]",
-            "hover:bg-white/[0.05]",
-            "focus-within:!bg-white/[0.05]",
-            "focus-within:!border-white/[0.2]",
-            "!cursor-text",
-            "h-14",
-            "rounded-2xl",
-            "border",
-          ],
-        }}
-        disabled={isLoading}
-        required
-      />
-
-      {/* Phone Field */}
-      <Input
-        name="phone"
-        type="tel"
-        placeholder="Phone number"
-        variant="flat"
-        startContent={<Phone className="h-4 w-4 text-neutral-500" />}
-        classNames={{
-          base: "w-full",
-          mainWrapper: "h-full",
-          input: ["bg-transparent", "text-white", "placeholder:text-neutral-500", "text-base", "font-light"],
-          inputWrapper: [
-            "bg-white/[0.03]",
-            "border-white/[0.1]",
-            "hover:bg-white/[0.05]",
-            "focus-within:!bg-white/[0.05]",
-            "focus-within:!border-white/[0.2]",
-            "!cursor-text",
-            "h-14",
-            "rounded-2xl",
-            "border",
-          ],
-        }}
-        disabled={isLoading}
-        required
-      />
-
-      {/* Password Field */}
-      <div className="space-y-3">
-        <Input
-          name="password"
-          placeholder="Create password"
-          variant="flat"
-          startContent={<Lock className="h-4 w-4 text-neutral-500" />}
-          endContent={
-            <button className="focus:outline-none" type="button" onClick={toggleVisibility}>
-              {isVisible ? (
-                <EyeSlashFilledIcon className="text-xl text-neutral-500 pointer-events-none" />
-              ) : (
-                <EyeFilledIcon className="text-xl text-neutral-500 pointer-events-none" />
-              )}
-            </button>
-          }
-          type={isVisible ? "text" : "password"}
-          classNames={{
-            base: "w-full",
-            mainWrapper: "h-full",
-            input: ["bg-transparent", "text-white", "placeholder:text-neutral-500", "text-base", "font-light"],
-            inputWrapper: [
-              "bg-white/[0.03]",
-              "border-white/[0.1]",
-              "hover:bg-white/[0.05]",
-              "focus-within:!bg-white/[0.05]",
-              "focus-within:!border-white/[0.2]",
-              "!cursor-text",
-              "h-14",
-              "rounded-2xl",
-              "border",
-            ],
-          }}
-          onValueChange={handlePasswordChange}
-          disabled={isLoading}
-          required
-        />
-
-        {password && (
-          <div className="space-y-2">
-            <div className="flex items-center justify-between text-xs">
-              <span className="text-neutral-500 font-light">Password strength</span>
-              <span className="text-neutral-400 font-light">
-                {passwordStrength < 50 ? "Weak" : passwordStrength < 75 ? "Good" : "Strong"}
-              </span>
-            </div>
-            <Progress
-              value={passwordStrength}
-              className="h-2"
-              classNames={{
-                base: "max-w-full",
-                track: "bg-white/[0.1] rounded-full",
-                indicator: "bg-white rounded-full",
-              }}
+          {/* Full Name & Phone */}
+          <div className="grid grid-cols-2 gap-2 my-0 py-0">
+            <Input
+              name="fullname"
+              placeholder="Full name"
+              variant="flat"
+              value={values.fullname}
+              onChange={handleChange}
+              onBlur={handleBlur}
+              startContent={<User className="h-4 w-4 mx-3 text-neutral-500" />}
+              classNames={inputClassNames}
+              disabled={isLoading}
+            />
+            <Input
+              name="phone"
+              placeholder="Phone number"
+              variant="flat"
+              value={values.phone}
+              onChange={handleChange}
+              onBlur={handleBlur}
+              startContent={<Phone className="h-4 w-4 mx-3 text-neutral-500" />}
+              classNames={inputClassNames}
+              disabled={isLoading}
             />
           </div>
-        )}
-      </div>
 
-      {/* Confirm Password Field */}
-      <Input
-        name="confirmPassword"
-        placeholder="Confirm password"
-        variant="flat"
-        startContent={<Lock className="h-4 w-4 text-neutral-500" />}
-        endContent={
-          <button className="focus:outline-none" type="button" onClick={toggleConfirmVisibility}>
-            {isConfirmVisible ? (
-              <EyeSlashFilledIcon className="text-xl text-neutral-500 pointer-events-none" />
-            ) : (
-              <EyeFilledIcon className="text-xl text-neutral-500 pointer-events-none" />
-            )}
-          </button>
-        }
-        type={isConfirmVisible ? "text" : "password"}
-        classNames={{
-          base: "w-full",
-          mainWrapper: "h-full",
-          input: ["bg-transparent", "text-white", "placeholder:text-neutral-500", "text-base", "font-light"],
-          inputWrapper: [
-            "bg-white/[0.03]",
-            "border-white/[0.1]",
-            "hover:bg-white/[0.05]",
-            "focus-within:!bg-white/[0.05]",
-            "focus-within:!border-white/[0.2]",
-            "!cursor-text",
-            "h-14",
-            "rounded-2xl",
-            "border",
-          ],
-        }}
-        disabled={isLoading}
-        required
-      />
+          {/* Email Field */}
+          <div className="flex justify-center w-full gap-3 align-start">
+            <div className="flex justify-start w-100 align-middle ml-3">
+              <ErrorMessage name="fullname" component="div" className="text-sm text-red-400" />
+            </div>
+            <div className="flex justify-start w-100 align-middle ml-3">
+              <ErrorMessage name="phone" component="div" className="text-sm text-red-400" />
+            </div>
+          </div>
 
-      {/* Checkboxes */}
-      <div className="space-y-4 pt-2">
-        <Checkbox
-          name="marketing"
-          classNames={{
-            base: "inline-flex w-full max-w-full bg-transparent hover:bg-transparent items-start",
-            label: "text-sm text-neutral-400 leading-relaxed font-light ml-3",
-            wrapper: "before:border-white/30 after:bg-white after:text-black rounded-lg",
-          }}
-        >
-          Send me exclusive offers and menu updates
-        </Checkbox>
+          {/* Email & Password */}
+          <div className="grid grid-cols-2 gap-2 my-0 py-0">
+            <Input
+              name="email"
+              placeholder="Email address"
+              variant="flat"
+              value={values.email}
+              onChange={handleChange}
+              onBlur={handleBlur}
+              startContent={<Mail className="h-4 w-4 mx-3 text-neutral-500" />}
+              classNames={inputClassNames}
+              disabled={isLoading}
+            />
+            <Input
+              name="password"
+              placeholder="Password"
+              type={isVisible ? "text" : "password"}
+              variant="flat"
+              value={values.password}
+              onChange={(e) => {
+                handleChange(e)
+                setPasswordStrength(calculatePasswordStrength(e.target.value))
+              }}
+              onBlur={handleBlur}
+              startContent={<Lock className="h-4 w-4 mx-3 text-neutral-500" />}
+              endContent={
+                <button type="button" onClick={toggleVisibility} className="focus:outline-none">
+                  {isVisible ? (
+                    <EyeSlashFilledIcon className="text-xl text-neutral-500" />
+                  ) : (
+                    <EyeFilledIcon className="text-xl text-neutral-500" />
+                  )}
+                </button>
+              }
+              classNames={inputClassNames}
+              disabled={isLoading}
+            />
+          </div>
+          <div className="flex justify-center w-full gap-3 align-start">
+            <div className="flex justify-start w-100 align-middle ml-3">
+              <ErrorMessage name="email" component="div" className="text-sm text-red-400" />
+            </div>
+            <div className="flex justify-start w-100 align-middle ml-3">
+              <ErrorMessage name="password" component="div" className="text-sm text-red-400" />
+            </div>
+          </div>
+          {/* Password Strength */}
+          {values.password && (
+            <Progress aria-label="Password strength" value={passwordStrength} className="my-2" color="primary" />
+          )}
 
-        <Checkbox
-          name="terms"
-          classNames={{
-            base: "inline-flex w-full max-w-full bg-transparent hover:bg-transparent items-start",
-            label: "text-sm text-neutral-400 leading-relaxed font-light ml-3",
-            wrapper: "before:border-white/30 after:bg-white after:text-black rounded-lg",
-          }}
-          required
-        >
-          I agree to the{" "}
-          <a href="/terms" className="text-white hover:text-neutral-300 underline underline-offset-2">
-            Terms of Service
-          </a>{" "}
-          and{" "}
-          <a href="/privacy" className="text-white hover:text-neutral-300 underline underline-offset-2">
-            Privacy Policy
-          </a>
-        </Checkbox>
-      </div>
+          {/* Address */}
+          <Input
+            name="address"
+            placeholder="Address"
+            variant="flat"
+            value={values.address}
+            onChange={handleChange}
+            onBlur={handleBlur}
+            classNames={inputClassNames}
+            disabled={isLoading}
+          />
+          <ErrorMessage name="address" component="div" className="text-sm text-red-400 ml-3" />
 
-      {/* Create Account Button */}
-      <Button
-        type="submit"
-        isLoading={isLoading}
-        className="w-full h-14 bg-white text-black hover:bg-neutral-100 font-normal transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98] text-base"
-        radius="xl"
-        endContent={!isLoading && <ArrowRight className="h-4 w-4" />}
-      >
-        {isLoading ? "Creating account..." : "Create account"}
-      </Button>
+          {/* City & Zipcode */}
+          <div className="grid grid-cols-2 gap-2 my-0 py-0">
+            <Input
+              name="city"
+              placeholder="City"
+              variant="flat"
+              value={values.city}
+              onChange={handleChange}
+              onBlur={handleBlur}
+              classNames={inputClassNames}
+              disabled={isLoading}
+            />
+            <Input
+              name="zipcode"
+              placeholder="Zipcode"
+              variant="flat"
+              value={values.zipcode}
+              onChange={handleChange}
+              onBlur={handleBlur}
+              classNames={inputClassNames}
+              disabled={isLoading}
+            />
+          </div>
+          <div className="flex justify-center w-full gap-3 align-start">
+            <div className="flex justify-start w-100 align-middle ml-3">
+              <ErrorMessage name="city" component="div" className="text-sm text-red-400" />
+            </div>
+            <div className="flex justify-start w-100 align-middle ml-3">
+              <ErrorMessage name="zipcode" component="div" className="text-sm text-red-400" />
+            </div>
+          </div>
 
-      {/* Divider */}
-      <div className="relative my-8">
-        <div className="absolute inset-0 flex items-center">
-          <div className="w-full border-t border-white/[0.1]"></div>
-        </div>
-        <div className="relative flex justify-center text-sm">
-          <span className="px-6 bg-white/[0.03] text-neutral-500 font-light rounded-full">or continue with</span>
-        </div>
-      </div>
+          {/* Checkboxes */}
+          <div className="space-y-4 pt-2">
+            <Checkbox
+              name="marketing"
+              isSelected={values.marketing}
+              onValueChange={(val) => setFieldValue("marketing", val)}
+              classNames={checkboxClassNames}
+            >
+              Send me exclusive offers and menu updates
+            </Checkbox>
 
-      {/* Quick Signup */}
-      <Button
-        type="button"
-        variant="flat"
-        className="w-full h-14 bg-white/[0.03] border border-white/[0.1] text-white hover:bg-white/[0.05] transition-all duration-300 font-light text-base"
-        disabled={isLoading}
-        radius="xl"
-        startContent={<Smartphone className="h-4 w-4" />}
-      >
-        Sign up with Phone
-      </Button>
-    </form>
+            <Checkbox
+              name="terms"
+              isSelected={values.terms}
+              onValueChange={(val) => setFieldValue("terms", val)}
+              classNames={checkboxClassNames}
+            >
+              I agree to the{" "}
+              <a href="/terms" className="text-white hover:text-neutral-300 underline">Terms</a> and{" "}
+              <a href="/privacy" className="text-white hover:text-neutral-300 underline">Privacy Policy</a>
+            </Checkbox>
+            <ErrorMessage name="terms" component="div" className="text-sm text-red-400" />
+          </div>
+
+          {/* Error & Success Messages */}
+          {error && (
+            <div className="bg-red-500/10 border border-red-500/20 text-red-400 p-4 rounded-2xl">
+              <p className="text-sm font-light">{error}</p>
+            </div>
+          )}
+          {success && (
+            <div className="bg-green-500/10 border border-green-500/20 text-green-400 p-4 rounded-2xl flex items-center space-x-3">
+              <Check className="h-4 w-4" />
+              <p className="text-sm font-light">{success}</p>
+            </div>
+          )}
+
+          {/* Submit */}
+          <Button
+            type="submit"
+            isLoading={isLoading}
+            className="w-full h-14 bg-white text-black rounded-md hover:bg-neutral-100 font-normal transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98] text-base"
+            radius="lg"
+            endContent={!isLoading && <ArrowRight className="h-4 w-4" />}
+          >
+            {isLoading ? "Creating account..." : "Create account"}
+          </Button>
+        </Form>
+      )}
+    </Formik>
   )
+}
+
+// reusable classNames for cleaner code
+const inputClassNames = {
+  base: "w-full",
+  mainWrapper: "h-full",
+  input: ["bg-transparent", "text-white", "placeholder:text-neutral-500", "text-base", "font-light"],
+  inputWrapper: [
+    "bg-white/[0.03]", "border-white/[0.1]", "hover:bg-white/[0.05]",
+    "focus:outline-none", "focus-visible:outline-none",
+    "!cursor-text", "h-14", "rounded-md", "border", "p-3"
+  ],
+}
+
+const checkboxClassNames = {
+  base: "inline-flex w-full max-w-full bg-transparent hover:bg-transparent items-center gap-3",
+  label: "text-sm text-neutral-400 leading-relaxed font-light",
+  wrapper: "before:border-white/30 after:bg-white after:text-black rounded-lg",
 }

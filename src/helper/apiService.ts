@@ -25,113 +25,160 @@ interface CreateUserResponse {
 }
 
 interface Product {
-  id: string;
+  _id: string;
   name: string;
   price: number;
   description?: string;
   imageUrl?: string;
+  category?: string;
+  rating?: number;
+  review?: number;
 }
 
-interface CartItem {
+interface Cart {
+  userId: string;
+  products: {
+    productId: Product;
+    quantity: number;
+  }[];
+}
+interface AddToCartPayload {
+  userId: string;
   productId: string;
   quantity: number;
 }
 
 const apiService = {
+  // ==================== User APIs ====================
+
   getAllUsers: async (): Promise<User[]> => {
-    const response: AxiosResponse<User[]> = await axios.get(`${BASE_URL}/api/getAllUsers`, {
-      withCredentials: true,
-    });
+    const response: AxiosResponse<User[]> = await axios.get(
+      `${BASE_URL}/api/getAllUsers`,
+      { withCredentials: true }
+    );
     return response.data;
   },
 
   getUserById: async (id: string): Promise<User> => {
-    const response: AxiosResponse<User> = await axios.get(`${BASE_URL}/api/getuserById/${id}`);
+    const response: AxiosResponse<User> = await axios.get(
+      `${BASE_URL}/api/getuserById/${id}`
+    );
     return response.data;
   },
 
   createUser: async (userData: Partial<User>): Promise<CreateUserResponse> => {
-    const response: AxiosResponse<CreateUserResponse> = await axios.post(`${BASE_URL}/api/createUser`, userData);
+    const response: AxiosResponse<CreateUserResponse> = await axios.post(
+      `${BASE_URL}/api/createUser`,
+      userData
+    );
     return response.data;
   },
 
   updateUser: async (id: string, userData: Partial<User>): Promise<User> => {
-    const response: AxiosResponse<User> = await axios.put(`${BASE_URL}/api/updateUser/${id}`, userData);
+    const response: AxiosResponse<User> = await axios.put(
+      `${BASE_URL}/api/updateUser/${id}`,
+      userData
+    );
     return response.data;
   },
 
   deleteUser: async (id: string): Promise<{ message: string }> => {
-    const response: AxiosResponse<{ message: string }> = await axios.delete(`${BASE_URL}/api/deleteUser/${id}`);
+    const response: AxiosResponse<{ message: string }> = await axios.delete(
+      `${BASE_URL}/api/deleteUser/${id}`
+    );
     return response.data;
   },
 
-  loginUser: async (userData: { email: string; password: string }): Promise<User> => {
-    const response: AxiosResponse<User> = await axios.post(`${BASE_URL}/api/login`, userData, {
-      withCredentials: true,
-    });
+  loginUser: async (userData: Partial<User>): Promise<CreateUserResponse> => {
+    const response: AxiosResponse<CreateUserResponse> = await axios.post(
+      `${BASE_URL}/api/login`,
+      userData,
+      { withCredentials: true }
+    );
     return response.data;
   },
 
   logoutUser: async (): Promise<{ message: string }> => {
-    const response: AxiosResponse<{ message: string }> = await axios.post(`${BASE_URL}/api/logout`, {}, {
-      withCredentials: true,
-    });
+    const response: AxiosResponse<{ message: string }> = await axios.post(
+      `${BASE_URL}/api/logout`,
+      {},
+      { withCredentials: true }
+    );
     return response.data;
   },
 
   googleSignIn: async (googleToken: string): Promise<User> => {
-    const response: AxiosResponse<User> = await axios.post(`${BASE_URL}/api/google-login`, { token: googleToken }, {
-      withCredentials: true,
-    });
+    const response: AxiosResponse<User> = await axios.post(
+      `${BASE_URL}/api/google-login`,
+      { token: googleToken },
+      { withCredentials: true }
+    );
     return response.data;
   },
 
   facebookLogin: async (facebookData: object): Promise<User> => {
-    const response: AxiosResponse<User> = await axios.post(`${BASE_URL}/api/facebook-login`, facebookData, {
-      withCredentials: true,
-    });
+    const response: AxiosResponse<User> = await axios.post(
+      `${BASE_URL}/api/facebook-login`,
+      facebookData,
+      { withCredentials: true }
+    );
     return response.data;
   },
 
+  // ==================== Product APIs ====================
+
   getAllProducts: async (): Promise<Product[]> => {
-    const response: AxiosResponse<Product[]> = await axios.get(`${BASE_URL}/api/getAllProducts`, {
-      withCredentials: true,
-    });
+    const response: AxiosResponse<Product[]> = await axios.get(
+      `${BASE_URL}/api/getAllProducts`,
+      { withCredentials: true }
+    );
     return response.data;
   },
 
   getProductById: async (id: string): Promise<Product> => {
-    const response: AxiosResponse<Product> = await axios.get(`${BASE_URL}/api/getProductById/${id}`, {
-      withCredentials: true,
-    });
+    const response: AxiosResponse<Product> = await axios.get(
+      `${BASE_URL}/api/getProductById/${id}`,
+      { withCredentials: true }
+    );
     return response.data;
   },
 
   createProduct: async (formData: FormData): Promise<Product> => {
-    const response: AxiosResponse<Product> = await axios.post(`${BASE_URL}/api/createProduct`, formData, {
-      withCredentials: true,
-      headers: { "Content-Type": "multipart/form-data" },
-    });
+    const response: AxiosResponse<Product> = await axios.post(
+      `${BASE_URL}/api/createProduct`,
+      formData,
+      {
+        withCredentials: true,
+        headers: { "Content-Type": "multipart/form-data" },
+      }
+    );
     return response.data;
   },
 
   updateProduct: async (id: string, formData: FormData): Promise<Product> => {
-    const response: AxiosResponse<Product> = await axios.put(`${BASE_URL}/api/updateProduct/${id}`, formData, {
-      withCredentials: true,
-      headers: { "Content-Type": "multipart/form-data" },
-    });
+    const response: AxiosResponse<Product> = await axios.put(
+      `${BASE_URL}/api/updateProduct/${id}`,
+      formData,
+      {
+        withCredentials: true,
+        headers: { "Content-Type": "multipart/form-data" },
+      }
+    );
     return response.data;
   },
 
   deleteProduct: async (id: string): Promise<{ message: string }> => {
-    const response: AxiosResponse<{ message: string }> = await axios.delete(`${BASE_URL}/api/deleteProduct/${id}`, {
-      withCredentials: true,
-    });
+    const response: AxiosResponse<{ message: string }> = await axios.delete(
+      `${BASE_URL}/api/deleteProduct/${id}`,
+      { withCredentials: true }
+    );
     return response.data;
   },
 
-  addToCart: async (userId: string, productId: string, quantity: number = 1): Promise<{ message: string }> => {
-    const response: AxiosResponse<{ message: string }> = await axios.post(
+  // ==================== Cart APIs ====================
+
+  addToCart: async ({ userId, productId, quantity }: AddToCartPayload): Promise<Cart> => {
+    const response: AxiosResponse<Cart> = await axios.post(
       `${BASE_URL}/api/addToCart/${userId}`,
       { productId, quantity },
       { withCredentials: true }
@@ -139,15 +186,16 @@ const apiService = {
     return response.data;
   },
 
-  getCart: async (userId: string): Promise<CartItem[]> => {
-    const response: AxiosResponse<CartItem[]> = await axios.get(`${BASE_URL}/api/getCart/${userId}`, {
-      withCredentials: true,
-    });
+  getCart: async (userId: string): Promise<Cart> => {
+    const response: AxiosResponse<Cart> = await axios.get(
+      `${BASE_URL}/api/getCart/${userId}`,
+      { withCredentials: true }
+    );
     return response.data;
   },
 
-  removeFromCart: async (userId: string, productId: string): Promise<{ message: string }> => {
-    const response: AxiosResponse<{ message: string }> = await axios.delete(
+  removeFromCart: async (userId: string, productId: string): Promise<Cart> => {
+    const response: AxiosResponse<Cart> = await axios.delete(
       `${BASE_URL}/api/removeFromCart/${userId}/${productId}`,
       { withCredentials: true }
     );

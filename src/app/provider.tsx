@@ -1,8 +1,9 @@
-// app/providers.tsx
+// app/providers.tsx or src/providers.tsx
+'use client'
 
-import { HeroUIProvider } from '@heroui/react'
-import { ToastProvider } from "@heroui/toast";
 import { ReactNode } from "react";
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 type ProvidersProps = {
     children: ReactNode;
@@ -10,12 +11,18 @@ type ProvidersProps = {
 
 export default function Providers({ children }: ProvidersProps) {
     return (
-        <HeroUIProvider>
-            <ToastProvider toastProps={{
-                radius: "sm",
-                variant: "flat",
-            }} />
+        <>
             {children}
-        </HeroUIProvider>
+            <ToastContainer
+                position="bottom-right"
+                autoClose={2000}
+                hideProgressBar={true}
+                newestOnTop={true}
+                closeOnClick
+                pauseOnHover
+                draggable
+                theme="dark"
+            />
+        </>
     );
 }

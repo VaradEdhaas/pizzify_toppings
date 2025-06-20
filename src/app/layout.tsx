@@ -4,7 +4,8 @@ import { Inter } from "next/font/google"
 import { NextUIProvider } from "@nextui-org/react"
 import "./globals.css"
 import { AuthProvider } from "@/components/context/AuthContext"
-import Providers from "./provider"
+import ReactQueryProvider from "./ReactQueryProvider"
+import ToastProvider from "./ToastProvider"
 
 const inter = Inter({ subsets: ["latin"] })
 
@@ -23,9 +24,11 @@ export default function RootLayout({
       <body className={inter.className}>
         <NextUIProvider>
           <AuthProvider>
-            <Providers>
-              {children}
-            </Providers>
+            <ReactQueryProvider>
+              <ToastProvider>
+                {children}
+              </ToastProvider>
+            </ReactQueryProvider>
           </AuthProvider>
         </NextUIProvider>
       </body>

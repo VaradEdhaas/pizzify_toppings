@@ -5,6 +5,7 @@ import React, { createContext, useState, useEffect, useContext, ReactNode } from
 export interface UserData {
   token: string;
   user: {
+    _id: string;
     role: string;
     [key: string]: any;
   };

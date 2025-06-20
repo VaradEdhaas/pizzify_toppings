@@ -1,10 +1,7 @@
 "use client"
 
 import type React from "react"
-import { useCallback, useEffect, useState } from "react"
-import { loadFull } from "tsparticles"
-import type { Container, Engine } from "tsparticles-engine"
-import Particles from "react-tsparticles"
+import { useEffect, useRef } from "react"
 
 interface SparklesCoreProps {
   id: string
@@ -19,131 +16,113 @@ interface SparklesCoreProps {
 export const SparklesCore: React.FC<SparklesCoreProps> = ({
   id,
   className,
-  background = "#0d47a1",
+  background = "transparent",
   minSize = 1,
   maxSize = 3,
   particleDensity = 120,
   particleColor = "#FFF",
 }) => {
-  const [init, setInit] = useState(false)
+  const canvasRef = useRef<HTMLCanvasElement>(null)
 
   useEffect(() => {
-    if (init) {
-      return
+    const canvas = canvasRef.current
+    if (!canvas) return
+
+    const ctx = canvas.getContext("2d")
+    if (!ctx) return
+
+    const resizeCanvas = () => {
+      canvas.width = window.innerWidth
+      canvas.height = window.innerHeight
     }
 
-    setInit(true)
-  }, [init])
+    resizeCanvas()
+    window.addEventListener("resize", resizeCanvas)
 
-  const particlesInit = useCallback(async (engine: Engine) => {
-    await loadFull(engine)
-  }, [])
+    const particles: Array<{
+      x: number
+      y: number
+      vx: number
+      vy: number
+      size: number
+      opacity: number
+      twinkle: number
+    }> = []
 
-  const particlesLoaded = useCallback(async (container: Container | undefined) => {
-    // particles loaded
-  }, [])
+    // Create particles
+    for (let i = 0; i < particleDensity; i++) {
+      particles.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        vx: (Math.random() - 0.5) * 0.5,
+        vy: (Math.random() - 0.5) * 0.5,
+        size: Math.random() * (maxSize - minSize) + minSize,
+        opacity: Math.random() * 0.8 + 0.2,
+        twinkle: Math.random() * Math.PI * 2,
+      })
+    }
+
+    const animate = () => {
+      ctx.clearRect(0, 0, canvas.width, canvas.height)
+
+      particles.forEach((particle) => {
+        // Update position
+        particle.x += particle.vx
+        particle.y += particle.vy
+        particle.twinkle += 0.02
+
+        // Wrap around screen
+        if (particle.x > canvas.width) particle.x = 0
+        if (particle.x < 0) particle.x = canvas.width
+        if (particle.y > canvas.height) particle.y = 0
+        if (particle.y < 0) particle.y = canvas.height
+
+        // Calculate twinkling opacity
+        const twinkleOpacity = particle.opacity * (0.5 + 0.5 * Math.sin(particle.twinkle))
+
+        // Draw particle
+        ctx.fillStyle = `${particleColor}${Math.floor(twinkleOpacity * 255)
+          .toString(16)
+          .padStart(2, "0")}`
+        ctx.beginPath()
+        ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2)
+        ctx.fill()
+
+        // Add subtle glow effect
+        if (particle.size > 2) {
+          ctx.fillStyle = `${particleColor}${Math.floor(twinkleOpacity * 0.3 * 255)
+            .toString(16)
+            .padStart(2, "0")}`
+          ctx.beginPath()
+          ctx.arc(particle.x, particle.y, particle.size * 2, 0, Math.PI * 2)
+          ctx.fill()
+        }
+      })
+
+      requestAnimationFrame(animate)
+    }
+
+    animate()
+
+    return () => {
+      window.removeEventListener("resize", resizeCanvas)
+    }
+  }, [minSize, maxSize, particleDensity, particleColor])
 
   return (
-    <Particles
-      className={className}
+    <canvas
+      ref={canvasRef}
       id={id}
-      init={particlesInit}
-      loaded={particlesLoaded}
-      options={{
-        background: {
-          color: {
-            value: background,
-          },
-        },
-        fullScreen: {
-          enable: false,
-          zIndex: 1,
-        },
-        fpsLimit: 120,
-        interactivity: {
-          events: {
-            onClick: {
-              enable: true,
-              mode: "push",
-            },
-            onHover: {
-              enable: true,
-              mode: "repulse",
-            },
-            resize: true,
-          },
-          modes: {
-            push: {
-              quantity: 4,
-            },
-            repulse: {
-              distance: 200,
-              duration: 0.4,
-            },
-          },
-        },
-        particles: {
-          color: {
-            value: particleColor,
-          },
-          links: {
-            color: particleColor,
-            distance: 150,
-            enable: false,
-            opacity: 0.5,
-            width: 1,
-          },
-          collisions: {
-            enable: false,
-          },
-          move: {
-            direction: "none",
-            enable: true,
-            outModes: {
-              default: "bounce",
-            },
-            random: false,
-            speed: 1,
-            straight: false,
-          },
-          number: {
-            density: {
-              enable: true,
-              area: 800,
-            },
-            value: particleDensity,
-          },
-          opacity: {
-            value: 0.5,
-            random: {
-              enable: true,
-              minimumValue: 0.1,
-            },
-            animation: {
-              enable: true,
-              speed: 1,
-              minimumValue: 0,
-              sync: false,
-            },
-          },
-          shape: {
-            type: "circle",
-          },
-          size: {
-            value: { min: minSize, max: maxSize },
-            random: {
-              enable: true,
-              minimumValue: 1,
-            },
-            animation: {
-              enable: true,
-              speed: 2,
-              minimumValue: 0,
-              sync: false,
-            },
-          },
-        },
-        detectRetina: true,
+      className={className}
+      style={{
+        background: background,
+        position: "absolute",
+        top: 0,
+        left: 0,
+        width: "100%",
+        height: "100%",
+        pointerEvents: "none",
+        zIndex: 1,
       }}
     />
   )

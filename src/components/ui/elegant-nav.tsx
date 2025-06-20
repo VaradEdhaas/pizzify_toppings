@@ -1,80 +1,122 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import Link from "next/link"
-import { Button } from "@heroui/react"
-import { Menu, X } from "lucide-react"
-import { motion, AnimatePresence } from "framer-motion"
+import { useState } from "react";
+import Link from "next/link";
+import { Button } from "@nextui-org/react"; // <- using NextUI's Button
+import { Menu, X, User } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import { useRouter } from "next/navigation";
+import apiService from "@/helper/apiService";
+import { toast } from "react-toastify";
 
 const navItems = [
   { name: "Menu", link: "/menu" },
   { name: "About", link: "/about" },
   { name: "Locations", link: "/locations" },
   { name: "Contact", link: "/contact" },
-]
+];
 
 export function ElegantNav() {
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [profileMenuOpen, setProfileMenuOpen] = useState(false);
+  const router = useRouter();
+
+  const handleLogout = async () => {
+    try {
+      await apiService.logoutUser();
+      router.push("/login");
+      toast.success("Logged out successfully. See you next time!")
+    } catch (error) {
+      await console.error("Logout failed:", error);
+    } finally {
+      setProfileMenuOpen(false);
+      setMobileMenuOpen(false);
+    }
+  };
 
   return (
     <>
       <nav className="fixed top-0 left-0 right-0 z-50 bg-black/80 backdrop-blur-2xl border-b border-white/5">
-        <div className="max-w-7xl mx-auto px-8 py-6">
-          <div className="flex items-center justify-between">
-            {/* Logo */}
-            <Link
-              href="/"
-              className="text-2xl font-extralight text-white tracking-[0.1em] hover:text-neutral-300 transition-colors duration-300"
-            >
-              Pizzify
-            </Link>
+        <div className="max-w-8xl mx-auto px-4 py-2 flex items-center justify-between">
+          <Link href="/" className="text-2xl font-extralight text-white tracking-[0.1em] hover:text-neutral-300 transition-colors duration-300">
+            Pizzify
+          </Link>
 
-            {/* Desktop Navigation */}
-            <div className="hidden md:flex items-center space-x-12">
-              {navItems.map((item, index) => (
-                <Link
-                  key={index}
-                  href={item.link}
-                  className="text-neutral-400 hover:text-white transition-colors duration-300 font-light text-sm tracking-wide relative group"
-                >
-                  {item.name}
-                  <span className="absolute -bottom-1 left-0 w-0 h-px bg-white transition-all duration-300 group-hover:w-full"></span>
-                </Link>
-              ))}
-            </div>
-
-            {/* Desktop CTA */}
-            <div className="hidden md:flex items-center space-x-8">
+          <div className="hidden md:flex items-center space-x-12">
+            {navItems.map((item, index) => (
               <Link
-                href="/login"
-                className="text-neutral-400 hover:text-white transition-colors duration-300 font-light text-sm tracking-wide"
+                key={index}
+                href={item.link}
+                className="text-neutral-400 hover:text-white transition-colors duration-300 font-light text-sm tracking-wide relative group"
               >
-                Sign In
+                {item.name}
+                <span className="absolute -bottom-1 left-0 w-0 h-px bg-white transition-all duration-300 group-hover:w-full"></span>
               </Link>
-              <Button
-                as={Link}
-                href="/signup"
-                className="h-11 px-8 bg-white text-black hover:bg-neutral-100 font-light transition-all duration-300 text-sm tracking-wide"
-                radius="none"
-              >
-                Order Now
-              </Button>
-            </div>
+            ))}
+          </div>
 
-            {/* Mobile Menu Button */}
+          <div className="hidden md:block relative">
             <Button
               isIconOnly
-              variant="flat"
-              className="md:hidden bg-transparent text-white hover:bg-white/10"
-              onPress={() => setMobileMenuOpen(!mobileMenuOpen)}
+              variant="light"
+              className="rounded-full w-10 h-10 bg-white/10 text-white hover:bg-white/20"
+              onPress={() => setProfileMenuOpen(!profileMenuOpen)}
             >
-              {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+              <User className="h-5 w-5" />
             </Button>
+
+            <AnimatePresence>
+              {profileMenuOpen && (
+                <motion.div
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  className="absolute right-0 mt-2 w-48 bg-black/80 border border-white/10 backdrop-blur-xl rounded-xl shadow-xl overflow-hidden"
+                >
+                  <Button
+                    as={Link}
+                    href="/profile"
+                    fullWidth
+                    variant="light"
+                    className="justify-start text-white hover:bg-white/5"
+                    onPress={() => setProfileMenuOpen(false)}
+                  >
+                    Profile
+                  </Button>
+                  <Button
+                    as={Link}
+                    href="/orders"
+                    fullWidth
+                    variant="light"
+                    className="justify-start text-white hover:bg-white/5"
+                    onPress={() => setProfileMenuOpen(false)}
+                  >
+                    Orders
+                  </Button>
+                  <Button
+                    fullWidth
+                    variant="light"
+                    className="justify-start text-white hover:bg-white/5"
+                    onPress={handleLogout}
+                  >
+                    Logout
+                  </Button>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
+
+          <Button
+            isIconOnly
+            variant="light"
+            className="md:hidden text-white"
+            onPress={() => setMobileMenuOpen(!mobileMenuOpen)}
+          >
+            {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+          </Button>
         </div>
       </nav>
 
-      {/* Mobile Menu */}
       <AnimatePresence>
         {mobileMenuOpen && (
           <motion.div
@@ -95,21 +137,30 @@ export function ElegantNav() {
                 </Link>
               ))}
               <div className="pt-6 border-t border-white/10 space-y-4">
-                <Link
-                  href="/login"
-                  className="block text-xl font-light text-neutral-400 hover:text-white transition-colors duration-300 tracking-wide"
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  Sign In
-                </Link>
                 <Button
                   as={Link}
-                  href="/signup"
-                  className="w-full h-12 bg-white text-black hover:bg-neutral-100 font-light tracking-wide"
-                  radius="none"
+                  href="/profile"
+                  variant="light"
+                  className="w-full justify-start text-white text-xl font-light hover:bg-white/5"
                   onPress={() => setMobileMenuOpen(false)}
                 >
-                  Order Now
+                  Profile
+                </Button>
+                <Button
+                  as={Link}
+                  href="/orders"
+                  variant="light"
+                  className="w-full justify-start text-white text-xl font-light hover:bg-white/5"
+                  onPress={() => setMobileMenuOpen(false)}
+                >
+                  Orders
+                </Button>
+                <Button
+                  variant="light"
+                  className="w-full justify-start text-white text-xl font-light hover:bg-white/5"
+                  onPress={handleLogout}
+                >
+                  Logout
                 </Button>
               </div>
             </div>
@@ -117,5 +168,5 @@ export function ElegantNav() {
         )}
       </AnimatePresence>
     </>
-  )
+  );
 }
