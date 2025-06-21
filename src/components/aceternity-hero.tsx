@@ -125,7 +125,7 @@ export function AceternityHero() {
                 variant="bordered"
                 size="lg"
                 className="h-14 px-8 bg-white/5 border-white/20 text-white hover:bg-white/10 transition-all duration-300 backdrop-blur-xl"
-                radius="xl"
+                radius="lg"
                 startContent={<Zap className="h-5 w-5" />}
               >
                 Quick Order

@@ -1,8 +1,8 @@
 "use client"
 
 import { useState } from "react"
-import { Button, Input, Checkbox, Progress } from "@nextui-org/react"
-import { EyeFilledIcon, EyeSlashFilledIcon } from "@nextui-org/shared-icons"
+import { Button, Input, Checkbox, Progress } from "@heroui/react"
+import { EyeFilledIcon, EyeSlashFilledIcon } from "@heroui/shared-icons"
 import { User, Mail, Phone, Lock, Check, ArrowRight } from "lucide-react"
 import { toast } from 'react-toastify'
 import { Formik, Form, ErrorMessage } from "formik"

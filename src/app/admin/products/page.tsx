@@ -1,8 +1,8 @@
 "use client"
-const page = () => {
+const Productpage = () => {
   return (
     <div className="bg-black text-white"> Product page </div>
   )
 }
 
-export default page
+export default Productpage

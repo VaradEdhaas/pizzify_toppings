@@ -1,11 +1,11 @@
 "use client";
 
 import Link from "next/link"
-import { Button } from "@nextui-org/react"
 import { Home, ArrowLeft, Search, Mail } from "lucide-react"
 import { GeometricBackground } from "@/components/geometric-background"
 import { FloatingElements } from "@/components/floating-elements"
 import { useRouter } from "next/navigation"
+import { Button } from "@/components/ui/button";
 
 export default function NotFound() {
   const router = useRouter();

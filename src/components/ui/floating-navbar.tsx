@@ -14,7 +14,6 @@ export const FloatingNav = ({
   navItems: {
     name: string
     link: string
-    icon?: JSX.Element
     submenu?: { name: string; link: string }[]
   }[]
   className?: string
@@ -219,7 +218,7 @@ export const FloatingNav = ({
                     href="/login"
                     variant="flat"
                     className="w-full h-12 bg-white/[0.05] border border-white/[0.1] text-white hover:bg-white/[0.1] transition-all duration-300 font-light"
-                    radius="xl"
+                    radius="lg"
                     onPress={toggleMobileMenu}
                   >
                     Sign In
@@ -228,7 +227,7 @@ export const FloatingNav = ({
                     as={Link}
                     href="/signup"
                     className="w-full h-12 bg-white text-black hover:bg-neutral-100 font-normal transition-all duration-300"
-                    radius="xl"
+                    radius="lg"
                     onPress={toggleMobileMenu}
                   >
                     Get Started

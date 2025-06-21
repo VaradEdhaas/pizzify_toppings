@@ -71,7 +71,7 @@ export function MenuPreview() {
             href="/menu"
             size="lg"
             className="h-14 px-8 bg-white text-black hover:bg-neutral-100 font-normal transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98] text-base"
-            radius="xl"
+            radius="lg"
             endContent={<ArrowRight className="h-4 w-4" />}
           >
             View Full Menu

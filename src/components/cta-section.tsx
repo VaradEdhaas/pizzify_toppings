@@ -23,7 +23,7 @@ export function CTASection() {
             href="/signup"
             size="lg"
             className="w-full sm:w-auto h-14 px-8 bg-white text-black hover:bg-neutral-100 font-normal transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98] text-base"
-            radius="xl"
+            radius="lg"
             endContent={<ArrowRight className="h-4 w-4" />}
           >
             Get Started
@@ -35,7 +35,7 @@ export function CTASection() {
             variant="bordered"
             size="lg"
             className="w-full sm:w-auto h-14 px-8 bg-white/[0.03] border-white/[0.1] text-white hover:bg-white/[0.05] transition-all duration-300 font-light text-base"
-            radius="xl"
+            radius="lg"
             startContent={<Smartphone className="h-4 w-4" />}
           >
             Browse Menu

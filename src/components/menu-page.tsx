@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useMemo, useEffect } from "react";
-import { Button, Card, CardBody } from "@nextui-org/react";
+import { Button, Card, CardBody } from "@heroui/react";
 import { Star, Plus, Filter, Search, ShoppingCart } from "lucide-react";
 import { ElegantNav } from "@/components/ui/elegant-nav";
 import { motion, AnimatePresence } from "framer-motion";

@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Alert, AlertDescription } from "@/components/ui/alert"
+import { Alert } from "@/components/ui/alert"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Loader2, Github } from "lucide-react"
 import { signup } from "@/app/signup/actions"
@@ -21,14 +21,15 @@ export function SignupForm() {
     setError("")
     setSuccess("")
 
+
     try {
       const result = await signup(formData)
-      if (result?.error) {
+      if ("error" in result && result.error) {
         setError(result.error)
       } else {
         setSuccess("Account created successfully! Please check your email to verify your account.")
       }
-    } catch (error) {
+    } catch {
       setError("An unexpected error occurred. Please try again.")
     } finally {
       setIsLoading(false)
@@ -101,22 +102,26 @@ export function SignupForm() {
               </a>
             </label>
           </div>
+
           {error && (
-            <Alert variant="destructive">
-              <AlertDescription>{error}</AlertDescription>
+            <Alert color="danger" variant="faded">
+              {error}
             </Alert>
           )}
+
           {success && (
-            <Alert>
-              <AlertDescription>{success}</AlertDescription>
+            <Alert color="success" variant="faded">
+              {success}
             </Alert>
           )}
+
           <Button disabled={isLoading} type="submit" className="w-full">
             {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
             Create Account
           </Button>
         </div>
       </form>
+
       <div className="relative">
         <div className="absolute inset-0 flex items-center">
           <span className="w-full border-t" />
@@ -125,7 +130,8 @@ export function SignupForm() {
           <span className="bg-background px-2 text-muted-foreground">Or continue with</span>
         </div>
       </div>
-      <Button variant="outline" type="button" disabled={isLoading}>
+
+      <Button variant="bordered" type="button" disabled={isLoading}>
         {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Github className="mr-2 h-4 w-4" />}
         GitHub
       </Button>

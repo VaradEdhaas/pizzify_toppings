@@ -1,41 +1,26 @@
 "use client"
 
 import * as React from "react"
-import { Input as NextUIInput, type InputProps as NextUIInputProps } from "@nextui-org/react"
+import { Input as HeroInput, type InputProps as HeroInputProps } from "@heroui/react"
 import { cn } from "@/lib/utils"
 
-export interface InputProps extends NextUIInputProps {
+export interface InputProps extends HeroInputProps {
   className?: string
 }
 
-const Input = React.forwardRef<HTMLInputElement, InputProps>(({ className, type, ...props }, ref) => {
-  return (
-    <NextUIInput
-      type={type}
-      className={cn("w-full", className)}
-      classNames={{
-        base: "w-full",
-        mainWrapper: "h-full",
-        input: ["bg-transparent", "text-white", "placeholder:text-neutral-500", "text-base", "font-light"],
-        inputWrapper: [
-          "bg-white/[0.03]",
-          "border-white/[0.1]",
-          "hover:bg-white/[0.05]",
-          "focus-within:!bg-white/[0.05]",
-          "focus-within:!border-white/[0.2]",
-          "!cursor-text",
-          "h-12",
-          "rounded-xl",
-          "border",
-        ],
-        label: "text-neutral-300 text-sm font-light",
-      }}
-      variant="bordered"
-      ref={ref}
-      {...props}
-    />
-  )
-})
+const Input = React.forwardRef<HTMLInputElement, InputProps>(
+  ({ className, type = "text", ...props }, ref) => {
+    return (
+      <HeroInput
+        ref={ref}
+        type={type}
+        className={cn("w-full", className)}
+        {...props}
+      />
+    )
+  }
+)
+
 Input.displayName = "Input"
 
 export { Input }

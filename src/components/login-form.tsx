@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Alert, AlertDescription } from "@/components/ui/alert"
+import { Alert } from "@/components/ui/alert"
 import { Loader2, Github } from "lucide-react"
 import { login } from "@/app/login/actions"
 
@@ -20,7 +20,7 @@ export function LoginForm() {
 
     try {
       const result = await login(formData)
-      if (result?.error) {
+      if ("error" in result) {
         setError(result.error)
       } else {
         router.push("/dashboard")
@@ -66,17 +66,20 @@ export function LoginForm() {
               required
             />
           </div>
+
           {error && (
-            <Alert variant="destructive">
-              <AlertDescription>{error}</AlertDescription>
+            <Alert color="danger" variant="faded">
+              {error}
             </Alert>
           )}
+
           <Button disabled={isLoading} type="submit" className="w-full">
             {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
             Sign In
           </Button>
         </div>
       </form>
+
       <div className="relative">
         <div className="absolute inset-0 flex items-center">
           <span className="w-full border-t" />
@@ -85,8 +88,13 @@ export function LoginForm() {
           <span className="bg-background px-2 text-muted-foreground">Or continue with</span>
         </div>
       </div>
-      <Button variant="outline" type="button" disabled={isLoading}>
-        {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Github className="mr-2 h-4 w-4" />}
+
+      <Button variant="bordered" type="button" disabled={isLoading}>
+        {isLoading ? (
+          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+        ) : (
+          <Github className="mr-2 h-4 w-4" />
+        )}
         GitHub
       </Button>
     </div>

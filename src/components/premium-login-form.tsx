@@ -1,8 +1,8 @@
 "use client"
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Button, Input } from "@nextui-org/react";
-import { EyeFilledIcon, EyeSlashFilledIcon } from "@nextui-org/shared-icons";
+import { Button, Input } from "@heroui/react";
+import { EyeFilledIcon, EyeSlashFilledIcon } from "@heroui/shared-icons";
 import { Mail, Lock, Smartphone, ArrowRight } from "lucide-react";
 import apiService from "@/helper/apiService";
 import { useFormik } from "formik";

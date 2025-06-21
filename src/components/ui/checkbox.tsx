@@ -1,25 +1,22 @@
-"use client"
+"use client";
 
-import * as React from "react"
-import { Checkbox as NextUICheckbox, type CheckboxProps as NextUICheckboxProps } from "@nextui-org/react"
-import { cn } from "@/lib/utils"
+import * as React from "react";
+import {
+  Checkbox as HeroUICheckbox,
+  type CheckboxProps as HeroUICheckboxProps,
+} from "@heroui/react";
+import { cn } from "@/lib/utils";
 
-export interface CheckboxProps extends NextUICheckboxProps {
-  className?: string
+export interface CheckboxProps extends HeroUICheckboxProps {
+  className?: string;
 }
 
-const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(({ className, ...props }, ref) => (
-  <NextUICheckbox
-    ref={ref}
-    className={cn("", className)}
-    classNames={{
-      base: "inline-flex w-full max-w-full bg-transparent hover:bg-transparent items-start",
-      label: "text-sm text-neutral-400 leading-relaxed font-light ml-3",
-      wrapper: "before:border-white/30 after:bg-white after:text-black rounded-lg",
-    }}
-    {...props}
-  />
-))
-Checkbox.displayName = "Checkbox"
+const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(
+  ({ className, ...props }, ref) => (
+    <HeroUICheckbox ref={ref} className={cn(className)} {...props} />
+  )
+);
 
-export { Checkbox }
+Checkbox.displayName = "Checkbox";
+
+export { Checkbox };

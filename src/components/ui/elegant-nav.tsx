@@ -2,12 +2,12 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Button } from "@nextui-org/react"; // <- using NextUI's Button
 import { Menu, X, User } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useRouter } from "next/navigation";
 import apiService from "@/helper/apiService";
 import { toast } from "react-toastify";
+import { Button } from "@heroui/react";
 
 const navItems = [
   { name: "Menu", link: "/menu" },
