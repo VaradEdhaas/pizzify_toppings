@@ -104,6 +104,7 @@ const apiService = {
       {},
       { withCredentials: true }
     );
+    localStorage.removeItem('currentUser')
     return response.data;
   },
 

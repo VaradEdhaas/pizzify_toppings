@@ -6,6 +6,7 @@ import "./globals.css"
 import { AuthProvider } from "@/components/context/AuthContext"
 import ReactQueryProvider from "./ReactQueryProvider"
 import ToastProvider from "./ToastProvider"
+import { HeroUIProvider } from "@heroui/react";
 
 const inter = Inter({ subsets: ["latin"] })
 
@@ -22,15 +23,17 @@ export default function RootLayout({
   return (
     <html lang="en" className="dark">
       <body className={inter.className}>
-        <NextUIProvider>
-          <AuthProvider>
-            <ReactQueryProvider>
-              <ToastProvider>
-                {children}
-              </ToastProvider>
-            </ReactQueryProvider>
-          </AuthProvider>
-        </NextUIProvider>
+        <HeroUIProvider>
+          <NextUIProvider>
+            <AuthProvider>
+              <ReactQueryProvider>
+                <ToastProvider>
+                  {children}
+                </ToastProvider>
+              </ReactQueryProvider>
+            </AuthProvider>
+          </NextUIProvider>
+        </HeroUIProvider>
       </body>
     </html>
   )

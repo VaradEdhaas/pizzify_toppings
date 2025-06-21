@@ -9,6 +9,7 @@ import { Formik, Form, ErrorMessage } from "formik"
 import * as Yup from "yup"
 import { useAuth } from "./context/AuthContext"
 import apiService from "@/helper/apiService"
+import { useRouter } from "next/navigation"
 
 const SignupSchema = Yup.object().shape({
   fullname: Yup.string().required("Full name is required"),
@@ -29,6 +30,7 @@ export function SignupForm() {
   const [error, setError] = useState("")
   const [success, setSuccess] = useState("")
   const { setCurrentUser } = useAuth();
+  const router = useRouter();
 
   const toggleVisibility = () => setIsVisible(!isVisible)
 
@@ -65,7 +67,8 @@ export function SignupForm() {
           role: response.user.role,
         }
       });
-      resetForm()
+      resetForm();
+      router.push("/");
     } catch (err: any) {
       toast.error("An unexpected error occurred. Please try again.")
     } finally {
