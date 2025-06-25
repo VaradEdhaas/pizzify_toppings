@@ -129,42 +129,56 @@ const Userpage = () => {
         />
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <Card className="bg-white/5 border border-white/10 backdrop-blur-2xl shadow-lg rounded-lg">
-          <CardHeader>
-            <CardTitle>Total Users</CardTitle>
-            <CardDescription>All registered users</CardDescription>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        {/* Total Users */}
+        <Card className="bg-white/5 border border-white/10 backdrop-blur-md shadow-lg rounded-xl">
+          <CardHeader className="flex flex-row items-center justify-between pb-2">
+            <CardTitle className="text-sm font-semibold text-white">Total Users</CardTitle>
+            <span className="text-xl">👥</span>
           </CardHeader>
-          <CardContent className="text-3xl font-bold">{users.length}</CardContent>
-        </Card>
-
-        <Card className="bg-white/5 border border-white/10 backdrop-blur-2xl shadow-lg rounded-lg">
-          <CardHeader>
-            <CardTitle>New Users</CardTitle>
-            <CardDescription>Last 7 days</CardDescription>
-          </CardHeader>
-          <CardContent className="text-3xl font-bold">
-            {users.slice(-7).length}
+          <CardContent>
+            <div className="text-3xl font-bold text-indigo-400">{users.length}</div>
+            <p className="text-sm text-white/60 mt-1">All registered users</p>
           </CardContent>
         </Card>
 
-        <Card className="bg-white/5 border border-white/10 backdrop-blur-2xl shadow-lg rounded-lg">
-          <CardHeader>
-            <CardTitle>Admins</CardTitle>
-            <CardDescription>Users with admin role</CardDescription>
+        {/* New Users */}
+        <Card className="bg-white/5 border border-white/10 backdrop-blur-md shadow-lg rounded-xl">
+          <CardHeader className="flex flex-row items-center justify-between pb-2">
+            <CardTitle className="text-sm font-semibold text-white">New Users</CardTitle>
+            <span className="text-xl">🆕</span>
           </CardHeader>
-          <CardContent className="text-3xl font-bold">
-            {users.filter((u) => u.role === "admin").length}
+          <CardContent>
+            <div className="text-3xl font-bold text-emerald-400">{users.slice(-7).length}</div>
+            <p className="text-sm text-white/60 mt-1">Joined in last 7 days</p>
           </CardContent>
         </Card>
 
-        <Card className="bg-white/5 border border-white/10 backdrop-blur-2xl shadow-lg rounded-lg">
-          <CardHeader>
-            <CardTitle>Guests</CardTitle>
-            <CardDescription>Non-admin users</CardDescription>
+        {/* Admins */}
+        <Card className="bg-white/5 border border-white/10 backdrop-blur-md shadow-lg rounded-xl">
+          <CardHeader className="flex flex-row items-center justify-between pb-2">
+            <CardTitle className="text-sm font-semibold text-white">Admins</CardTitle>
+            <span className="text-xl">🛡️</span>
           </CardHeader>
-          <CardContent className="text-3xl font-bold">
-            {users.filter((u) => u.role !== "admin").length}
+          <CardContent>
+            <div className="text-3xl font-bold text-yellow-400">
+              {users.filter((u) => u.role === "admin").length}
+            </div>
+            <p className="text-sm text-white/60 mt-1">Users with admin rights</p>
+          </CardContent>
+        </Card>
+
+        {/* Guests */}
+        <Card className="bg-white/5 border border-white/10 backdrop-blur-md shadow-lg rounded-xl">
+          <CardHeader className="flex flex-row items-center justify-between pb-2">
+            <CardTitle className="text-sm font-semibold text-white">Guests</CardTitle>
+            <span className="text-xl">🎫</span>
+          </CardHeader>
+          <CardContent>
+            <div className="text-3xl font-bold text-rose-400">
+              {users.filter((u) => u.role !== "admin").length}
+            </div>
+            <p className="text-sm text-white/60 mt-1">Non-admin users</p>
           </CardContent>
         </Card>
       </div>

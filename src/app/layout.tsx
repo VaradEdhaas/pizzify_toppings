@@ -6,6 +6,7 @@ import { AuthProvider } from "@/components/context/AuthContext"
 import ReactQueryProvider from "./ReactQueryProvider"
 import ToastProvider from "./ToastProvider"
 import { HeroUIProvider } from "@heroui/react";
+import GlobalSpinner from "@/components/GlobalSpinner"
 
 const inter = Inter({ subsets: ["latin"] })
 
@@ -26,6 +27,7 @@ export default function RootLayout({
           <AuthProvider>
             <ReactQueryProvider>
               <ToastProvider>
+                <GlobalSpinner />
                 {children}
               </ToastProvider>
             </ReactQueryProvider>

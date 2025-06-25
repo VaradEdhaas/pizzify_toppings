@@ -50,9 +50,14 @@ interface AddToCartPayload {
   quantity: number;
 }
 
-const storedUser = localStorage.getItem("currentUser");
-const currentUser = storedUser ? JSON.parse(storedUser) : null;
-const token = currentUser?.token;
+const getToken = (): string | null => {
+  if (typeof window !== "undefined") {
+    const storedUser = localStorage.getItem("currentUser");
+    const currentUser = storedUser ? JSON.parse(storedUser) : null;
+    return currentUser?.token || null;
+  }
+  return null;
+}
 
 const apiService = {
   // ==================== User APIs ====================
@@ -81,6 +86,7 @@ const apiService = {
   },
 
   updateUser: async (id: string, userData: Partial<User>): Promise<User> => {
+    const token = getToken();
     const response: AxiosResponse<User> = await axios.put(
       `${BASE_URL}/api/updateUser/${id}`,
       userData,
@@ -94,6 +100,7 @@ const apiService = {
   },
 
   deleteUser: async (id: string): Promise<{ message: string }> => {
+    const token = getToken();
     const response: AxiosResponse<{ message: string }> = await axios.delete(
       `${BASE_URL}/api/deleteUser/${id}`,
       {
