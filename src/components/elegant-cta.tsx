@@ -4,8 +4,12 @@ import { Button } from "@heroui/react"
 import { ArrowRight } from "lucide-react"
 import Link from "next/link"
 import { motion } from "framer-motion"
+import { TextGenerateEffect } from "./ui/text-generate-effect"
 
 export function ElegantCTA() {
+  const words = `Join thousands of pizza lovers who have discovered the perfect
+balance of tradition, quality, and taste.Your perfect slice awaits`;
+
   return (
     <section className="py-32 px-8 bg-black relative overflow-hidden">
       {/* Subtle Background Pattern */}
@@ -31,10 +35,9 @@ export function ElegantCTA() {
             <span className="text-4xl md:text-5xl lg:text-7xl text-neutral-600">Pizza</span>
           </h2>
           <div className="w-32 h-px bg-gradient-to-r from-white/30 to-transparent mx-auto mb-12"></div>
-          <p className="text-xl md:text-2xl font-light text-neutral-400 mb-16 leading-relaxed max-w-3xl mx-auto">
-            Join thousands of pizza lovers who have discovered the perfect balance of tradition, quality, and taste.
-            Your perfect slice awaits.
-          </p>
+          <div className="my-10 w-full font-light">
+            <TextGenerateEffect words={words} />
+          </div>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
             <Button

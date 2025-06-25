@@ -3,9 +3,11 @@
 import { useState, useEffect } from "react"
 import Link from "next/link"
 import { Button } from "@heroui/react"
-import { ArrowRight, Play, Star, Clock, Users, Sparkles } from "lucide-react"
+import { ArrowRight, Play, Sparkles } from "lucide-react"
 import { ElegantNav } from "@/components/ui/elegant-nav"
 import { motion, useScroll, useTransform } from "framer-motion"
+import { SparklesCore } from "./ui/heading-sparkles"
+import { WavyBackground } from "./ui/wavy-background"
 
 export function ElegantHero() {
   const [mounted, setMounted] = useState(false)
@@ -104,10 +106,12 @@ export function ElegantHero() {
               transition={{ duration: 1.2, delay: 0.3, ease: "easeOut" }}
               className="mb-20"
             >
-              <h1 className="text-8xl md:text-9xl lg:text-[12rem] font-black leading-[0.75] tracking-[-0.02em] mb-12">
-                <span className="block text-white">PIZZA</span>
-                <span className="block text-white/30 font-extralight">FUSION</span>
-              </h1>
+              <WavyBackground className="max-w-4xl mx-auto pb-40">
+                <h1 className="text-8xl md:text-9xl lg:text-[12rem] font-black leading-[0.75] tracking-[-0.02em] mb-12">
+                  <span className="block text-white">PIZZA</span>
+                  <span className="block text-white/30 font-extralight">FUSION</span>
+                </h1>
+              </WavyBackground>
 
               <motion.div
                 initial={{ width: 0 }}
@@ -126,38 +130,6 @@ export function ElegantHero() {
                 <br />
                 <span className="text-white/80">Every slice tells a story of two cultures.</span>
               </motion.p>
-            </motion.div>
-
-            {/* Minimal Stats */}
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 1, delay: 1.2 }}
-              className="flex items-center justify-center space-x-20 mb-24"
-            >
-              {[
-                { icon: Star, number: "4.9", label: "Rating" },
-                { icon: Clock, number: "20min", label: "Delivery" },
-                { icon: Users, number: "150K+", label: "Customers" },
-              ].map((stat, index) => (
-                <motion.div
-                  key={index}
-                  initial={{ opacity: 0, scale: 0.8 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ duration: 0.8, delay: 1.4 + index * 0.2 }}
-                  className="text-center group cursor-pointer"
-                  whileHover={{ scale: 1.05 }}
-                >
-                  <motion.div
-                    className="w-16 h-16 bg-white/[0.03] border border-white/[0.08] rounded-2xl flex items-center justify-center mx-auto mb-4 backdrop-blur-2xl group-hover:bg-white/[0.06] transition-all duration-500"
-                    whileHover={{ borderColor: "rgba(255,255,255,0.15)" }}
-                  >
-                    <stat.icon className="h-6 w-6 text-white/40 group-hover:text-white/60 transition-colors duration-500" />
-                  </motion.div>
-                  <div className="text-3xl font-light text-white mb-2">{stat.number}</div>
-                  <div className="text-xs uppercase tracking-[0.2em] text-white/40 font-light">{stat.label}</div>
-                </motion.div>
-              ))}
             </motion.div>
 
             {/* Clean CTA Buttons */}

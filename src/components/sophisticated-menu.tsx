@@ -1,15 +1,17 @@
-"use client"
+"use client";
 
-import { Button } from "@heroui/react"
-import { ArrowRight, Star, Clock, ChefHat } from "lucide-react"
-import Link from "next/link"
-import { motion, useInView } from "framer-motion"
-import { useRef } from "react"
+import { Button } from "@heroui/react";
+import { ArrowRight, Star, Clock, ChefHat } from "lucide-react";
+import Link from "next/link";
+import { motion, useInView } from "framer-motion";
+import { useRef } from "react";
+import { AuroraBackground } from "./ui/aurora-background";
 
 const fusionPizzas = [
   {
     name: "Tandoori Margherita",
-    description: "San Marzano tomatoes, paneer tikka, fresh basil, tandoori spices, mint chutney drizzle",
+    description:
+      "San Marzano tomatoes, paneer tikka, fresh basil, tandoori spices, mint chutney drizzle",
     price: "28",
     rating: "4.9",
     time: "15min",
@@ -18,7 +20,8 @@ const fusionPizzas = [
   },
   {
     name: "Butter Chicken Supreme",
-    description: "Creamy tomato base, tender chicken tikka, mozzarella, fresh coriander, naan crust",
+    description:
+      "Creamy tomato base, tender chicken tikka, mozzarella, fresh coriander, naan crust",
     price: "35",
     rating: "4.8",
     time: "18min",
@@ -27,37 +30,34 @@ const fusionPizzas = [
   },
   {
     name: "Paneer Makhani Royale",
-    description: "Rich makhani sauce, grilled paneer, bell peppers, caramelized onions, kasuri methi",
+    description:
+      "Rich makhani sauce, grilled paneer, bell peppers, caramelized onions, kasuri methi",
     price: "32",
     rating: "4.9",
     time: "16min",
     chef: true,
     spiceLevel: "Medium",
   },
-]
+];
 
 const fusionCategories = [
   { name: "Desi Classics", count: "8 items", icon: "🇮🇳" },
   { name: "Italian Fusion", count: "6 items", icon: "🇮🇹" },
   { name: "Spice Masters", count: "5 items", icon: "🌶️" },
   { name: "Sweet Endings", count: "4 items", icon: "🍰" },
-]
+];
 
 export function SophisticatedMenu() {
-  const ref = useRef(null)
-  const isInView = useInView(ref, { once: true, margin: "-100px" })
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true, margin: "-100px" });
 
   return (
-    <section ref={ref} className="py-32 px-8 bg-neutral-950 relative overflow-hidden">
-      {/* Subtle Background */}
-      <div className="absolute inset-0">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.01)_1px,transparent_1px)] bg-[size:50px_50px]" />
-        <div className="absolute top-0 left-0 w-[30rem] h-[30rem] bg-white/[0.01] rounded-full blur-3xl" />
-        <div className="absolute bottom-0 right-0 w-[25rem] h-[25rem] bg-white/[0.008] rounded-full blur-3xl" />
-      </div>
-
-      <div className="max-w-7xl mx-auto relative z-10">
-        {/* Clean Header */}
+    <AuroraBackground>
+      <section
+        ref={ref}
+        className="relative z-10 py-32 px-8 max-w-7xl mx-auto"
+      >
+        {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 50 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
@@ -72,7 +72,9 @@ export function SophisticatedMenu() {
           >
             <div className="inline-flex items-center space-x-3 px-6 py-2 bg-white/[0.03] border border-white/[0.08] rounded-full backdrop-blur-2xl">
               <ChefHat className="h-4 w-4 text-white/40" />
-              <span className="text-sm text-white/60 font-light tracking-[0.15em]">FUSION MENU</span>
+              <span className="text-sm text-white/60 font-light tracking-[0.15em]">
+                FUSION MENU
+              </span>
             </div>
           </motion.div>
 
@@ -95,19 +97,24 @@ export function SophisticatedMenu() {
             />
 
             <p className="text-lg text-white/50 font-light max-w-3xl mx-auto leading-relaxed">
-              Each pizza is a masterpiece, crafted with passion and served with pride.
+              Each pizza is a masterpiece, crafted with passion and served with
+              pride.
             </p>
           </motion.div>
         </motion.div>
 
-        {/* Clean Pizza Grid */}
+        {/* Pizza Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-20">
           {fusionPizzas.map((pizza, index) => (
             <motion.div
               key={index}
               initial={{ opacity: 0, y: 40, scale: 0.95 }}
               animate={isInView ? { opacity: 1, y: 0, scale: 1 } : {}}
-              transition={{ duration: 0.8, delay: 0.6 + index * 0.15, ease: "easeOut" }}
+              transition={{
+                duration: 0.8,
+                delay: 0.6 + index * 0.15,
+                ease: "easeOut",
+              }}
               className="group cursor-pointer"
             >
               <motion.div
@@ -129,17 +136,20 @@ export function SophisticatedMenu() {
                   )}
                   {pizza.chef && (
                     <div className="px-3 py-1 bg-white/[0.05] border border-white/[0.1] text-white/60 text-xs font-light rounded-full">
-                      Chef's Choice
+                      Chef&apos;s Choice
                     </div>
                   )}
                 </div>
 
                 {/* Content */}
                 <div className="mb-8">
-                  <h3 className="text-xl font-light text-white mb-3 tracking-wide">{pizza.name}</h3>
-                  <p className="text-white/40 font-light leading-relaxed text-sm mb-6">{pizza.description}</p>
+                  <h3 className="text-xl font-light text-white mb-3 tracking-wide">
+                    {pizza.name}
+                  </h3>
+                  <p className="text-white/40 font-light leading-relaxed text-sm mb-6">
+                    {pizza.description}
+                  </p>
 
-                  {/* Stats */}
                   <div className="flex items-center space-x-6 text-sm">
                     <div className="flex items-center space-x-1">
                       <Star className="h-3 w-3 text-white/30" />
@@ -153,9 +163,10 @@ export function SophisticatedMenu() {
                   </div>
                 </div>
 
-                {/* Price & Action */}
                 <div className="flex items-center justify-between">
-                  <span className="text-2xl font-light text-white">₹{pizza.price}</span>
+                  <span className="text-2xl font-light text-white">
+                    ₹{pizza.price}
+                  </span>
                   <Button
                     size="sm"
                     className="bg-white text-black hover:bg-white/90 font-normal transition-all duration-300"
@@ -169,14 +180,16 @@ export function SophisticatedMenu() {
           ))}
         </div>
 
-        {/* Clean Categories */}
+        {/* Categories */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.8, delay: 1.2 }}
           className="mb-16"
         >
-          <h3 className="text-2xl font-light text-white text-center mb-12 tracking-wide">Categories</h3>
+          <h3 className="text-2xl font-light text-white text-center mb-12 tracking-wide">
+            Categories
+          </h3>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
             {fusionCategories.map((category, index) => (
               <motion.div
@@ -189,13 +202,15 @@ export function SophisticatedMenu() {
               >
                 <div className="text-2xl mb-3">{category.icon}</div>
                 <h4 className="text-white/80 font-light mb-2">{category.name}</h4>
-                <p className="text-white/30 text-sm font-light">{category.count}</p>
+                <p className="text-white/30 text-sm font-light">
+                  {category.count}
+                </p>
               </motion.div>
             ))}
           </div>
         </motion.div>
 
-        {/* Clean CTA */}
+        {/* CTA Button */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
@@ -213,7 +228,7 @@ export function SophisticatedMenu() {
             View Full Menu
           </Button>
         </motion.div>
-      </div>
-    </section>
-  )
+      </section>
+    </AuroraBackground>
+  );
 }

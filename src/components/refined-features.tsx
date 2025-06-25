@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion"
 import { Clock, Award, Leaf, Users } from "lucide-react"
+import { SparklesCore } from "./ui/heading-sparkles"
 
 const features = [
   {
@@ -47,7 +48,28 @@ export function RefinedFeatures() {
               <br />
               <span className="text-white/30 font-extralight">PASSION</span>
             </h2>
-            <div className="w-16 h-px bg-white/20 mx-auto mb-8"></div>
+            <div className="relative w-full max-w-xl h-32 mx-auto mb-8">
+              {/* Gradients */}
+              <div className="absolute inset-x-20 top-0 bg-gradient-to-r from-transparent via-indigo-500 to-transparent h-[2px] w-3/4 blur-sm" />
+              <div className="absolute inset-x-20 top-0 bg-gradient-to-r from-transparent via-indigo-500 to-transparent h-px w-3/4" />
+              <div className="absolute inset-x-60 top-0 bg-gradient-to-r from-transparent via-sky-500 to-transparent h-[5px] w-1/4 blur-sm" />
+              <div className="absolute inset-x-60 top-0 bg-gradient-to-r from-transparent via-sky-500 to-transparent h-px w-1/4" />
+
+              {/* Core component */}
+              <SparklesCore
+                background="transparent"
+                minSize={0.4}
+                maxSize={1}
+                particleDensity={1200}
+                className="w-full h-full"
+                particleColor="#FFFFFF"
+              />
+
+              {/* Radial Gradient to prevent sharp edges */}
+              <div className="absolute inset-0 w-full h-full bg-black [mask-image:radial-gradient(350px_200px_at_top,transparent_20%,white)]"></div>
+            </div>
+
+            {/* <div className="w-16 h-px bg-white/20 mx-auto mb-8"></div> */}
             <p className="text-lg text-white/40 font-light max-w-2xl mx-auto leading-relaxed">
               We believe in the art of fusion cuisine. Every detail matters, from ingredient selection to cultural
               authenticity.
@@ -104,6 +126,6 @@ export function RefinedFeatures() {
           ))}
         </div>
       </div>
-    </div>
+    </div >
   )
 }
