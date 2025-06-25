@@ -1,15 +1,31 @@
 "use client"
 
-import { useState } from "react"
-import { Button, Input, Checkbox, Progress } from "@heroui/react"
+import { useState, useEffect } from "react"
+import { Button, Input, Progress } from "@heroui/react"
 import { EyeFilledIcon, EyeSlashFilledIcon } from "@heroui/shared-icons"
 import { User, Mail, Phone, Lock, Check, ArrowRight } from "lucide-react"
-import { toast } from 'react-toastify'
+import { toast } from "react-toastify"
 import { Formik, Form, ErrorMessage } from "formik"
 import * as Yup from "yup"
 import { useAuth } from "./context/AuthContext"
 import apiService from "@/helper/apiService"
 import { useRouter } from "next/navigation"
+import { Checkbox } from "./ui/checkbox"
+
+type SignupFormProps = {
+  initialValues: {
+    fullname: string
+    email: string
+    password: string
+    phone: string
+    address: string
+    city: string
+    zipcode: string
+    marketing: boolean
+  }
+  onSubmit: (values: SignupFormProps["initialValues"], formikHelpers: { resetForm: () => void }) => Promise<void>
+  isUpdateMode?: boolean
+}
 
 const SignupSchema = Yup.object().shape({
   fullname: Yup.string().required("Full name is required"),
@@ -19,18 +35,16 @@ const SignupSchema = Yup.object().shape({
   address: Yup.string().required("Address is required"),
   city: Yup.string().required("City is required"),
   zipcode: Yup.string().required("Zipcode is required"),
-  terms: Yup.boolean().oneOf([true], "You must accept terms and conditions"),
 })
 
-
-export function SignupForm() {
+export function SignupForm({ initialValues, onSubmit, isUpdateMode = false }: SignupFormProps) {
   const [isVisible, setIsVisible] = useState(false)
   const [passwordStrength, setPasswordStrength] = useState(0)
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState("")
   const [success, setSuccess] = useState("")
-  const { setCurrentUser } = useAuth();
-  const router = useRouter();
+  const { setCurrentUser } = useAuth()
+  const router = useRouter()
 
   const toggleVisibility = () => setIsVisible(!isVisible)
 
@@ -43,7 +57,12 @@ export function SignupForm() {
     return strength
   }
 
-  const handleSubmit = async (values: any, { resetForm }: any) => {
+  const internalSubmit = async (values: SignupFormProps["initialValues"], { resetForm }: { resetForm: () => void }) => {
+    if (isUpdateMode) {
+      await onSubmit(values, { resetForm })
+      return
+    }
+
     setIsLoading(true)
     setError("")
     setSuccess("")
@@ -57,7 +76,7 @@ export function SignupForm() {
         city: values.city,
         zipcode: values.zipcode,
       })
-      toast.success("Your account has been created successfully",)
+      toast.success("Your account has been created successfully")
       setCurrentUser({
         token: response.token,
         user: {
@@ -65,10 +84,10 @@ export function SignupForm() {
           name: response.user.fullname,
           email: response.user.email,
           role: response.user.role,
-        }
-      });
-      resetForm();
-      router.push("/");
+        },
+      })
+      resetForm()
+      router.push("/")
     } catch (err: any) {
       toast.error("An unexpected error occurred. Please try again.")
     } finally {
@@ -78,23 +97,13 @@ export function SignupForm() {
 
   return (
     <Formik
-      initialValues={{
-        fullname: "",
-        email: "",
-        password: "",
-        phone: "",
-        address: "",
-        city: "",
-        zipcode: "",
-        terms: false,
-        marketing: false,
-      }}
+      initialValues={initialValues}
       validationSchema={SignupSchema}
-      onSubmit={handleSubmit}
+      onSubmit={internalSubmit}
+      enableReinitialize
     >
       {({ values, handleChange, handleBlur, setFieldValue }) => (
         <Form className="space-y-6">
-
           {/* Full Name & Phone */}
           <div className="grid grid-cols-2 gap-2 my-0 py-0">
             <Input
@@ -121,14 +130,9 @@ export function SignupForm() {
             />
           </div>
 
-          {/* Email Field */}
           <div className="flex justify-center w-full gap-3 align-start">
-            <div className="flex justify-start w-100 align-middle ml-3">
-              <ErrorMessage name="fullname" component="div" className="text-sm text-red-400" />
-            </div>
-            <div className="flex justify-start w-100 align-middle ml-3">
-              <ErrorMessage name="phone" component="div" className="text-sm text-red-400" />
-            </div>
+            <ErrorMessage name="fullname" component="div" className="text-sm text-red-400 ml-3" />
+            <ErrorMessage name="phone" component="div" className="text-sm text-red-400 ml-3" />
           </div>
 
           {/* Email & Password */}
@@ -169,15 +173,12 @@ export function SignupForm() {
               disabled={isLoading}
             />
           </div>
+
           <div className="flex justify-center w-full gap-3 align-start">
-            <div className="flex justify-start w-100 align-middle ml-3">
-              <ErrorMessage name="email" component="div" className="text-sm text-red-400" />
-            </div>
-            <div className="flex justify-start w-100 align-middle ml-3">
-              <ErrorMessage name="password" component="div" className="text-sm text-red-400" />
-            </div>
+            <ErrorMessage name="email" component="div" className="text-sm text-red-400 ml-3" />
+            <ErrorMessage name="password" component="div" className="text-sm text-red-400 ml-3" />
           </div>
-          {/* Password Strength */}
+
           {values.password && (
             <Progress aria-label="Password strength" value={passwordStrength} className="my-2" color="primary" />
           )}
@@ -218,51 +219,11 @@ export function SignupForm() {
               disabled={isLoading}
             />
           </div>
+
           <div className="flex justify-center w-full gap-3 align-start">
-            <div className="flex justify-start w-100 align-middle ml-3">
-              <ErrorMessage name="city" component="div" className="text-sm text-red-400" />
-            </div>
-            <div className="flex justify-start w-100 align-middle ml-3">
-              <ErrorMessage name="zipcode" component="div" className="text-sm text-red-400" />
-            </div>
+            <ErrorMessage name="city" component="div" className="text-sm text-red-400 ml-3" />
+            <ErrorMessage name="zipcode" component="div" className="text-sm text-red-400 ml-3" />
           </div>
-
-          {/* Checkboxes */}
-          <div className="space-y-4 pt-2">
-            <Checkbox
-              name="marketing"
-              isSelected={values.marketing}
-              onValueChange={(val) => setFieldValue("marketing", val)}
-              classNames={checkboxClassNames}
-            >
-              Send me exclusive offers and menu updates
-            </Checkbox>
-
-            <Checkbox
-              name="terms"
-              isSelected={values.terms}
-              onValueChange={(val) => setFieldValue("terms", val)}
-              classNames={checkboxClassNames}
-            >
-              I agree to the{" "}
-              <a href="/terms" className="text-white hover:text-neutral-300 underline">Terms</a> and{" "}
-              <a href="/privacy" className="text-white hover:text-neutral-300 underline">Privacy Policy</a>
-            </Checkbox>
-            <ErrorMessage name="terms" component="div" className="text-sm text-red-400" />
-          </div>
-
-          {/* Error & Success Messages */}
-          {error && (
-            <div className="bg-red-500/10 border border-red-500/20 text-red-400 p-4 rounded-2xl">
-              <p className="text-sm font-light">{error}</p>
-            </div>
-          )}
-          {success && (
-            <div className="bg-green-500/10 border border-green-500/20 text-green-400 p-4 rounded-2xl flex items-center space-x-3">
-              <Check className="h-4 w-4" />
-              <p className="text-sm font-light">{success}</p>
-            </div>
-          )}
 
           {/* Submit */}
           <Button
@@ -272,7 +233,7 @@ export function SignupForm() {
             radius="lg"
             endContent={!isLoading && <ArrowRight className="h-4 w-4" />}
           >
-            {isLoading ? "Creating account..." : "Create account"}
+            {isLoading ? "Processing..." : isUpdateMode ? "Update user" : "Create account"}
           </Button>
         </Form>
       )}
@@ -280,7 +241,6 @@ export function SignupForm() {
   )
 }
 
-// reusable classNames for cleaner code
 const inputClassNames = {
   base: "w-full",
   mainWrapper: "h-full",
@@ -293,7 +253,8 @@ const inputClassNames = {
 }
 
 const checkboxClassNames = {
-  base: "inline-flex w-full max-w-full bg-transparent hover:bg-transparent items-center gap-3",
-  label: "text-sm text-neutral-400 leading-relaxed font-light",
-  wrapper: "before:border-white/30 after:bg-white after:text-black rounded-lg",
+  base: "flex items-center gap-2 w-full bg-transparent",
+  label: "text-sm text-neutral-400 font-light",
+  wrapper:
+    "w-4 h-4 shrink-0 border border-white/30 rounded-sm after:bg-white after:text-black after:scale-90",
 }

@@ -34,3 +34,15 @@ export const Routes = {
     EDIT_PRODUCT: "/admin/products/edit-product",
   },
 } as const;
+
+export type User = {
+  _id: string
+  fullname: string
+  email: string
+  password?: string
+  phone?: string
+  address?: string
+  city?: string
+  zipcode?: string
+  role: string
+}

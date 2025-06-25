@@ -23,13 +23,13 @@ export default function RootLayout({
     <html lang="en" className="dark">
       <body className={inter.className}>
         <HeroUIProvider>
-            <AuthProvider>
-              <ReactQueryProvider>
-                <ToastProvider>
-                  {children}
-                </ToastProvider>
-              </ReactQueryProvider>
-            </AuthProvider>
+          <AuthProvider>
+            <ReactQueryProvider>
+              <ToastProvider>
+                {children}
+              </ToastProvider>
+            </ReactQueryProvider>
+          </AuthProvider>
         </HeroUIProvider>
       </body>
     </html>

@@ -28,7 +28,7 @@ const features = [
 
 export function RefinedFeatures() {
   return (
-    <section className="py-24 px-8 bg-black">
+    <div className="flex min-h-screen bg-black text-white">
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-20">
           <motion.div
@@ -104,6 +104,6 @@ export function RefinedFeatures() {
           ))}
         </div>
       </div>
-    </section>
+    </div>
   )
 }

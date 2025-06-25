@@ -13,6 +13,8 @@ import { toast } from "react-toastify";
 import { useAuth } from "./context/AuthContext";
 import { useCart } from "./hooks/useCart";
 import { FloatingCartBar } from "./FloatingBarCart";
+import { Tabs, TabsList, TabsTrigger } from "./ui/tabs";
+import { Input } from "./ui/input";
 
 export function MenuPage() {
   const [activeCategory, setActiveCategory] = useState("food");
@@ -130,25 +132,27 @@ export function MenuPage() {
           <div className="max-w-7xl mx-auto">
             {/* Tabs + Search */}
             <div className="flex flex-col lg:flex-row items-center justify-between mb-16 gap-8">
-              <div className="flex space-x-2 p-2 border rounded-2xl border-white/[0.08] bg-white/[0.02] backdrop-blur-2xl">
-                <button
-                  onClick={() => setActiveCategory("food")}
-                  className={`px-8 py-3 rounded-xl transition ${activeCategory === "food" ? "bg-white text-black" : "text-white/60 hover:text-white"}`}
-                >
-                  Pizzas
-                </button>
-                <button
-                  onClick={() => setActiveCategory("drinks")}
-                  className={`px-8 py-3 rounded-xl transition ${activeCategory === "drinks" ? "bg-white text-black" : "text-white/60 hover:text-white"}`}
-                >
-                  Beverages
-                </button>
-              </div>
+              <Tabs value={activeCategory} onValueChange={setActiveCategory}>
+                <TabsList className="rounded-2xl border border-white/10 bg-white/5 backdrop-blur-2xl p-1">
+                  <TabsTrigger
+                    value="food"
+                    className="px-8 py-3 rounded-xl data-[state=active]:bg-white data-[state=active]:text-black text-white/60 hover:text-white"
+                  >
+                    Pizzas
+                  </TabsTrigger>
+                  <TabsTrigger
+                    value="drinks"
+                    className="px-8 py-3 rounded-xl data-[state=active]:bg-white data-[state=active]:text-black text-white/60 hover:text-white"
+                  >
+                    Beverages
+                  </TabsTrigger>
+                </TabsList>
+              </Tabs>
 
               <div className="flex items-center space-x-4">
                 <div className="relative">
                   <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 h-4 w-4 text-white/40" />
-                  <input
+                  <Input
                     type="text"
                     placeholder="Search items..."
                     value={searchQuery}

@@ -1,6 +1,6 @@
 @import 'tailwindcss';
 
-@layer base {
+/* @layer base {
   :root {
     --background: 0 0% 100%;
     --foreground: 222.2 84% 4.9%;
@@ -57,7 +57,7 @@
   }
 }
 
-@layer utilities {
+@layer utilities { */
   @keyframes blob {
     0% {
       transform: translate(0px, 0px) scale(1);
@@ -96,4 +96,4 @@
     writing-mode: vertical-rl;
     text-orientation: mixed;
   }
-}
+/* } */

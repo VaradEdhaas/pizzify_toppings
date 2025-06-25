@@ -1,8 +1,10 @@
 import axios, { AxiosResponse } from "axios";
 import { BASE_URL } from "./constantProperties";
+import { useContext } from "react";
+import AuthContext from "@/components/context/AuthContext";
 
 interface User {
-  id: string;
+  _id: string;
   fullname: string;
   email: string;
   password: string;
@@ -48,6 +50,10 @@ interface AddToCartPayload {
   quantity: number;
 }
 
+const storedUser = localStorage.getItem("currentUser");
+const currentUser = storedUser ? JSON.parse(storedUser) : null;
+const token = currentUser?.token;
+
 const apiService = {
   // ==================== User APIs ====================
 
@@ -77,14 +83,24 @@ const apiService = {
   updateUser: async (id: string, userData: Partial<User>): Promise<User> => {
     const response: AxiosResponse<User> = await axios.put(
       `${BASE_URL}/api/updateUser/${id}`,
-      userData
-    );
-    return response.data;
+      userData,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    )
+    return response.data
   },
 
   deleteUser: async (id: string): Promise<{ message: string }> => {
     const response: AxiosResponse<{ message: string }> = await axios.delete(
-      `${BASE_URL}/api/deleteUser/${id}`
+      `${BASE_URL}/api/deleteUser/${id}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
     );
     return response.data;
   },

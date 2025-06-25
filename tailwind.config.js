@@ -12,7 +12,7 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        muted: require('tailwindcss/colors').neutral,
+        ...heroui.tailwindColors,
       },
       borderRadius: {
         xl: '1rem',

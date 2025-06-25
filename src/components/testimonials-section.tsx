@@ -30,7 +30,7 @@ const testimonials = [
 
 export function TestimonialsSection() {
   return (
-    <section className="py-24 px-8 bg-black">
+    <div className="flex min-h-screen bg-black text-white">
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-extralight text-white mb-6 tracking-tight">
@@ -71,6 +71,6 @@ export function TestimonialsSection() {
           ))}
         </div>
       </div>
-    </section>
+    </div>
   )
 }
