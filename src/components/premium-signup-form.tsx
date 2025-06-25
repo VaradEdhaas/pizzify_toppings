@@ -252,9 +252,3 @@ const inputClassNames = {
   ],
 }
 
-const checkboxClassNames = {
-  base: "flex items-center gap-2 w-full bg-transparent",
-  label: "text-sm text-neutral-400 font-light",
-  wrapper:
-    "w-4 h-4 shrink-0 border border-white/30 rounded-sm after:bg-white after:text-black after:scale-90",
-}
