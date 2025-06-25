@@ -11,9 +11,9 @@ import { Button } from "@heroui/react";
 
 const navItems = [
   { name: "Menu", link: "/menu" },
-  { name: "About", link: "/about" },
-  { name: "Locations", link: "/locations" },
-  { name: "Contact", link: "/contact" },
+  { name: "About", link: "/#about" },
+  { name: "Reviews", link: "/#reviews" },
+  { name: "Contact", link: "/#contact" },
 ];
 
 export function ElegantNav() {

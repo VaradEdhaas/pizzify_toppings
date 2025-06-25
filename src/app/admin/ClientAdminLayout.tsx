@@ -24,7 +24,13 @@ const floatingShapes = [
     { key: "shape3", x: 500, y: 250, rotate: 90, duration: 7, delay: 0.5 },
 ]
 
-export default function ClientAdminLayout({ children }: { children: React.ReactNode }) {
+interface ClientAdminLayoutProps {
+    children: React.ReactNode;
+    selected: string;
+    onSelect: (page: string) => void;
+}
+
+export default function ClientAdminLayout({ children }: ClientAdminLayoutProps) {
     const pathname = usePathname()
     const router = useRouter()
     const [activeTab, setActiveTab] = useState(pathname)

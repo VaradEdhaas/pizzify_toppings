@@ -182,7 +182,7 @@ export function MenuPage() {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -20 }}
                 transition={{ duration: 0.5 }}
-                className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+                className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-8"
               >
                 {filteredItems.map((item, index) => (
                   <motion.div
@@ -218,11 +218,11 @@ export function MenuPage() {
                         <div className="p-6 flex flex-col justify-between flex-grow">
                           <div className="flex justify-between items-start mb-4">
                             <h3 className="text-lg text-white font-light">{item.name}</h3>
-                            <div className="text-white text-xl font-light">₹{item.price}</div>
+                            <div className="text-xl font-light text-green-400">₹{item.price}</div>
                           </div>
                           <div className="flex items-center space-x-2 mb-3">
-                            <Star className="h-3 w-3 text-white/40 fill-current" />
-                            <span className="text-white/60 text-sm font-light">{item?.rating ?? "4.2"}</span>
+                            <Star className="h-3 w-3 text-yellow-300 fill-current" />
+                            <span className="text-yellow-300 text-sm font-light">{item?.rating ?? "4.2"}</span>
                             <span className="text-white/30 text-sm font-light">({item?.review ?? "124"} reviews)</span>
                           </div>
                           <div className="min-h-[48px] mb-6">

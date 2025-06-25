@@ -44,11 +44,11 @@ export default function HomePage() {
   return (
     <main className="min-h-screen bg-black">
       <ElegantHero />
-      <RefinedFeatures />
+      <div id="about"><RefinedFeatures /></div>
       <SophisticatedMenu />
-      <MinimalTestimonials />
+      <div id="reviews"><MinimalTestimonials /></div>
       <ElegantCTA />
-      <SophisticatedFooter />
+      <div id="contact"><SophisticatedFooter /></div>
     </main>
   );
 }

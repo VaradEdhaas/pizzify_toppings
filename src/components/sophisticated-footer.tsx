@@ -39,7 +39,7 @@ export function SophisticatedFooter() {
               {["Menu", "About", "Locations", "Contact"].map((item) => (
                 <Link
                   key={item}
-                  href={`/${item.toLowerCase()}`}
+                  href={item === "Menu" ? "/menu" : `/#${item.toLowerCase()}`}
                   className="block text-neutral-400 hover:text-white transition-colors duration-300 font-light"
                 >
                   {item}

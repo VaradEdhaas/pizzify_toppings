@@ -14,6 +14,7 @@ module.exports = {
       colors: {
         ...heroui.tailwindColors,
       },
+      scrollBehavior: ['responsive'],
       borderRadius: {
         xl: '1rem',
         '2xl': '1.5rem',
