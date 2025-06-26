@@ -134,9 +134,18 @@ const Productpage = () => {
             </TabsList>
           </Tabs>
 
-          <Dialog open={openDialog} onOpenChange={handleDialogClose}>
+          <Dialog open={openDialog} onOpenChange={(state) => {
+            setOpenDialog(state);
+            if (!state) setEditProduct(null);
+          }}>
             <DialogTrigger asChild>
-              <button className="h-12 px-6 bg-white/10 hover:bg-white/20 text-white rounded-xl border border-white/10 transition duration-200">
+              <button
+                className="h-12 px-6 bg-white/10 hover:bg-white/20 text-white rounded-xl border border-white/10 transition duration-200"
+                onClick={() => {
+                  setEditProduct(null);
+                  setOpenDialog(true);
+                }}
+              >
                 + Add Product
               </button>
             </DialogTrigger>

@@ -2,7 +2,11 @@
 
 import { motion } from "framer-motion"
 import { Clock, Award, Leaf, Users } from "lucide-react"
-import { SparklesCore } from "./ui/heading-sparkles"
+import dynamic from "next/dynamic";
+
+const SparklesCore = dynamic(() => import("../components/ui/heading-sparkles"), {
+  ssr: false,
+});
 
 const features = [
   {

@@ -6,7 +6,6 @@ import { Button } from "@heroui/react"
 import { ArrowRight, Play, Sparkles } from "lucide-react"
 import { ElegantNav } from "@/components/ui/elegant-nav"
 import { motion, useScroll, useTransform } from "framer-motion"
-import { SparklesCore } from "./ui/heading-sparkles"
 import { WavyBackground } from "./ui/wavy-background"
 
 export function ElegantHero() {

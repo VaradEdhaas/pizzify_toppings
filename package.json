@@ -50,6 +50,7 @@
     "embla-carousel-react": "^8.6.0",
     "formik": "^2.4.6",
     "framer-motion": "^12.18.1",
+    "gsap": "^3.13.0",
     "js-cookie": "^3.0.5",
     "lucide-react": "^0.515.0",
     "motion": "^12.18.1",
