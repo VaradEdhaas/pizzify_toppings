@@ -31,10 +31,22 @@ export function useCart(userId: string) {
         onSuccess: () => queryClient.invalidateQueries({ queryKey: ['cart', userId] }),
     });
 
+    const clearCartMutation = useMutation({
+        mutationFn: () => apiService.clearCart(userId),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['cart', userId] });
+            toast.success('Cart cleared!');
+        },
+        onError: () => {
+            toast.error('Failed to clear cart.');
+        },
+    });
+
     return {
         cart,
         isLoading,
         addToCart: addMutation.mutate,
         removeFromCart: removeMutation.mutate,
+        clearCartMutation: clearCartMutation.mutate
     };
 }

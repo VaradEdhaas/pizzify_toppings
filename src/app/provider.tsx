@@ -14,7 +14,7 @@ export default function Providers({ children }: ProvidersProps) {
         <>
             {children}
             <ToastContainer
-                position="bottom-right"
+                position="top-right"
                 autoClose={2000}
                 hideProgressBar={true}
                 newestOnTop={true}

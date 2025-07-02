@@ -50,6 +50,75 @@ interface AddToCartPayload {
   quantity: number;
 }
 
+interface RazorpayOrderResponse {
+  success: boolean;
+  order: {
+    id: string;
+    amount: number;
+    currency: string;
+  };
+}
+
+interface PaymentVerificationPayload {
+  razorpay_payment_id: string;
+  razorpay_order_id: string;
+  razorpay_signature: string;
+}
+
+interface OrderCreationPayload {
+  amount: number;
+  paymentId: string;
+  userId: string;
+  products: {
+    productId: Product;
+    quantity: number;
+  }[];
+  razorpayOrderId: string;
+  razorpayPaymentId: string;
+  razorpaySignature: string;
+  deliveryAddress?: {
+    street: string;
+    city: string;
+    state: string;
+    zipCode: string;
+    country: string;
+  };
+}
+interface Order {
+  _id: string;
+  user: string;
+  items: {
+    product: Product;
+    quantity: number;
+    priceAtPurchase: number;
+    name: string;
+    image: string;
+  }[];
+  totalAmount: number;
+  paymentId: string;
+  razorpayOrderId: string;
+  razorpayPaymentId: string;
+  razorpaySignature: string;
+  deliveryAddress: {
+    street: string;
+    city: string;
+    state: string;
+    zipCode: string;
+    country: string;
+  };
+  paymentStatus: string;
+  status: string;
+  notes?: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+const axiosInstance = axios.create({
+  baseURL: BASE_URL,
+  withCredentials: true,
+  timeout: 10000,
+});
+
 const getToken = (): string | null => {
   if (typeof window !== "undefined") {
     const storedUser = localStorage.getItem("currentUser");
@@ -225,6 +294,162 @@ const apiService = {
     );
     return response.data;
   },
+
+  clearCart: async (userId: string): Promise<{ success: boolean; message: string }> => {
+    const response: AxiosResponse<{ success: boolean; message: string }> = await axios.delete(
+      `${BASE_URL}/api/clearCart/${userId}`,
+      { withCredentials: true }
+    );
+    return response.data;
+  },
+
+  // ==================== Payment APIs ====================
+
+  createRazorpayOrder: async (amount: number): Promise<RazorpayOrderResponse> => {
+    const token = getToken();
+    try {
+      const response = await axiosInstance.post(
+        "/api/create-order",
+        { amount },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+      return response.data;
+    } catch (error) {
+      console.error("Error creating Razorpay order:", error);
+      throw error;
+    }
+  },
+
+  verifyPayment: async (payload: PaymentVerificationPayload): Promise<{ success: boolean }> => {
+    const token = getToken();
+    const response: AxiosResponse<{ success: boolean }> = await axios.post(
+      `${BASE_URL}/api/verify-payment`,
+      payload,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        withCredentials: true
+      }
+    );
+    return response.data;
+  },
+
+  // ==================== Order APIs ====================
+
+  createOrder: async (orderData: OrderCreationPayload): Promise<Order> => {
+    const token = getToken();
+    const response: AxiosResponse<Order> = await axios.post(
+      `${BASE_URL}/api/orders`,
+      orderData,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        withCredentials: true
+      }
+    );
+    return response.data;
+  },
+
+  getAllOrders: async (): Promise<Order[]> => {
+    const token = getToken();
+    const response: AxiosResponse<Order[]> = await axios.get(
+      `${BASE_URL}/api/orders`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        withCredentials: true
+      }
+    );
+    return response.data;
+  },
+
+  getOrderById: async (id: string): Promise<Order> => {
+    const token = getToken();
+    const response: AxiosResponse<Order> = await axios.get(
+      `${BASE_URL}/api/orders/${id}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        withCredentials: true
+      }
+    );
+    return response.data;
+  },
+
+  getOrdersByUserId: async (userId: string): Promise<Order[]> => {
+    const token = getToken();
+    const response: AxiosResponse<Order[]> = await axios.get(
+      `${BASE_URL}/api/orders/user/${userId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        withCredentials: true
+      }
+    );
+    return response.data;
+  },
+
+  updateOrderStatus: async (
+    orderId: string,
+    status: 'processing' | 'shipped' | 'delivered' | 'cancelled'
+  ): Promise<{ message: string }> => {
+    const token = getToken();
+    const response: AxiosResponse<{ message: string }> = await axios.put(
+      `${BASE_URL}/api/orders/${orderId}/status`,
+      { status },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        withCredentials: true
+      }
+    );
+    return response.data;
+  },
+
+  cancelOrder: async (orderId: string): Promise<{ message: string }> => {
+    const token = getToken();
+    const response: AxiosResponse<{ message: string }> = await axios.put(
+      `${BASE_URL}/api/orders/${orderId}/cancel`,
+      {},
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        withCredentials: true
+      }
+    );
+    return response.data;
+  },
+
+  requestRefund: async (
+    orderId: string,
+    reason: string
+  ): Promise<{ message: string }> => {
+    const token = getToken();
+    const response: AxiosResponse<{ message: string }> = await axios.put(
+      `${BASE_URL}/api/orders/${orderId}/refund`,
+      { reason },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        withCredentials: true
+      }
+    );
+    return response.data;
+  },
+
 };
 
 export default apiService;
