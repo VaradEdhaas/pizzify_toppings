@@ -17,6 +17,7 @@ import { TypewriterEffectSmooth } from "@/components/ui/typewritter-effect";
 import { useRouter } from "next/navigation";
 import apiService from "@/helper/apiService";
 import { toast } from "react-toastify";
+import Link from "next/link";
 declare global {
     interface Window {
         Razorpay: any;
@@ -170,7 +171,7 @@ export default function CartPage() {
     if (!hydrated) return null;
     if (!userId) return <EmptyState message="Please log in to view your cart." />;
     if (isLoading) return <EmptyState message="Loading cart..." />;
-    if (!localCart.length) return <EmptyState message="Your cart is empty 🛒" />;
+    if (!localCart.length) return <EmptyState message="Looks like your cart's on a diet! Go to the menu and add some tasty items 🍕🛒" />;
 
     const words = [
         {
@@ -345,8 +346,14 @@ export default function CartPage() {
 
 function EmptyState({ message }: { message: string }) {
     return (
-        <div className="min-h-screen bg-black text-white flex items-center justify-center text-muted-foreground text-center px-6">
+        <div className="min-h-screen bg-black text-white flex flex-col items-center justify-center text-muted-foreground text-center px-6 space-y-4">
             <p className="text-lg">{message}</p>
+            <Link
+                href="/menu"
+                className="bg-white text-black px-5 py-2 rounded hover:bg-gray-200 transition"
+            >
+                Go to Menu 🍕
+            </Link>
         </div>
     );
 }
