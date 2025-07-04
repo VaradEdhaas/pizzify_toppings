@@ -4,13 +4,13 @@ import { useState, useEffect } from "react"
 import Link from "next/link"
 import { Button } from "@heroui/react"
 import { ArrowRight, Play, Sparkles } from "lucide-react"
-import { ElegantNav } from "@/components/ui/elegant-nav"
 import { motion, useScroll, useTransform } from "framer-motion"
 import { WavyBackground } from "./ui/wavy-background"
 
 export function ElegantHero() {
   const [mounted, setMounted] = useState(false)
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
+  const [screenSize, setScreenSize] = useState({ width: 1920, height: 1080 })
   const { scrollY } = useScroll()
   const y = useTransform(scrollY, [0, 500], [0, 150])
   const opacity = useTransform(scrollY, [0, 300], [1, 0])
@@ -22,16 +22,27 @@ export function ElegantHero() {
       setMousePosition({ x: e.clientX, y: e.clientY })
     }
 
+    const handleResize = () => {
+      setScreenSize({
+        width: window.innerWidth,
+        height: window.innerHeight,
+      })
+    }
+
+    handleResize() // Set initial screen size
     window.addEventListener("mousemove", handleMouseMove)
-    return () => window.removeEventListener("mousemove", handleMouseMove)
+    window.addEventListener("resize", handleResize)
+
+    return () => {
+      window.removeEventListener("mousemove", handleMouseMove)
+      window.removeEventListener("resize", handleResize)
+    }
   }, [])
 
   if (!mounted) return null
 
   return (
     <div className="min-h-screen bg-black relative overflow-hidden">
-      <ElegantNav />
-
       {/* Subtle White Gradient */}
       <div
         className="absolute w-96 h-96 bg-white/[0.02] rounded-full blur-3xl pointer-events-none transition-all duration-1000 ease-out"
@@ -54,8 +65,8 @@ export function ElegantHero() {
             key={i}
             className="absolute w-1 h-1 bg-white/20 rounded-full"
             initial={{
-              x: Math.random() * window.innerWidth,
-              y: Math.random() * window.innerHeight,
+              x: Math.random() * screenSize.width,
+              y: Math.random() * screenSize.height,
             }}
             animate={{
               y: [null, -120],
@@ -103,9 +114,8 @@ export function ElegantHero() {
               initial={{ opacity: 0, y: 50 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 1.2, delay: 0.3, ease: "easeOut" }}
-              className="mb-20"
             >
-              <WavyBackground className="max-w-4xl mx-auto pb-40">
+              <WavyBackground className="w-full mx-auto">
                 <h1 className="text-8xl md:text-9xl lg:text-[12rem] font-black leading-[0.75] tracking-[-0.02em] mb-12">
                   <span className="block text-white">PIZZA</span>
                   <span className="block text-white/30 font-extralight">FUSION</span>
@@ -118,50 +128,6 @@ export function ElegantHero() {
                 transition={{ duration: 1.5, delay: 1, ease: "easeOut" }}
                 className="h-px bg-white/30 mx-auto mb-16"
               />
-
-              <motion.p
-                initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 1, delay: 0.8 }}
-                className="text-xl md:text-2xl text-white/60 font-light leading-relaxed max-w-4xl mx-auto tracking-wide"
-              >
-                Where Italian craftsmanship meets Indian spice mastery.
-                <br />
-                <span className="text-white/80">Every slice tells a story of two cultures.</span>
-              </motion.p>
-            </motion.div>
-
-            {/* Clean CTA Buttons */}
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 2, y: 0 }}
-              transition={{ duration: 1, delay: 1.8 }}
-              className="flex flex-col sm:flex-row items-center justify-center gap-6 mb-32"
-            >
-              <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-                <Button
-                  as={Link}
-                  href="/menu"
-                  size="lg"
-                  className="h-14 px-12 bg-white text-black hover:bg-white/90 font-normal transition-all duration-300 text-lg tracking-wide"
-                  radius="none"
-                  endContent={<ArrowRight className="h-5 w-5 ml-2" />}
-                >
-                  Explore Menu
-                </Button>
-              </motion.div>
-
-              <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-                <Button
-                  variant="bordered"
-                  size="lg"
-                  className="h-14 px-12 border border-white/20 text-white hover:border-white/40 hover:bg-white/[0.03] font-light transition-all duration-300 text-lg tracking-wide backdrop-blur-2xl"
-                  radius="none"
-                  startContent={<Play className="h-5 w-5 mr-2" />}
-                >
-                  Our Story
-                </Button>
-              </motion.div>
             </motion.div>
           </div>
         </div>

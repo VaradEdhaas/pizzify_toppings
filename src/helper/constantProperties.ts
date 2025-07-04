@@ -1,6 +1,6 @@
 
-export const BASE_URL = "http://localhost:5000";
-// export const BASE_URL = "domain-name";
+// export const BASE_URL = "http://localhost:5000";
+export const BASE_URL = "https://pizzifychef.onrender.com";
 
 export const QueryKeys = {
   USER: "getAllUsers",

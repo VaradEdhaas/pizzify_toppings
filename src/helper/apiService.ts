@@ -84,7 +84,7 @@ interface OrderCreationPayload {
     country: string;
   };
 }
-interface Order {
+export interface Order {
   _id: string;
   user: string;
   items: {
@@ -132,16 +132,29 @@ const apiService = {
   // ==================== User APIs ====================
 
   getAllUsers: async (): Promise<User[]> => {
+    const token = getToken();
     const response: AxiosResponse<User[]> = await axios.get(
       `${BASE_URL}/api/getAllUsers`,
-      { withCredentials: true }
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        withCredentials: true
+      }
     );
     return response.data;
   },
 
   getUserById: async (id: string): Promise<User> => {
+    const token = getToken();
     const response: AxiosResponse<User> = await axios.get(
-      `${BASE_URL}/api/getuserById/${id}`
+      `${BASE_URL}/api/getuserById/${id}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        withCredentials: true
+      }
     );
     return response.data;
   },

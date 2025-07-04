@@ -8,6 +8,7 @@ import ToastProvider from "./ToastProvider"
 import { HeroUIProvider } from "@heroui/react";
 import GlobalSpinner from "@/components/GlobalSpinner"
 import RazorpayScriptLoader from "@/components/RazorpayScriptLoader"
+import AppClientWrapper from "./ShowElegantNav"
 
 const inter = Inter({ subsets: ["latin"] })
 
@@ -30,7 +31,9 @@ export default function RootLayout({
               <ToastProvider>
                 <GlobalSpinner />
                 <RazorpayScriptLoader />
+                <AppClientWrapper>
                 {children}
+                </AppClientWrapper>
               </ToastProvider>
             </ReactQueryProvider>
           </AuthProvider>

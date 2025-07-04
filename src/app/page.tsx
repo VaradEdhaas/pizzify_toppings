@@ -18,6 +18,13 @@ export default function HomePage() {
   const role = currentUser?.user?.role;
 
   const [selectedPage, setSelectedPage] = useState("Dashboard");
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) return null;
 
   if (role === "admin") {
     const getPageComponent = () => {
