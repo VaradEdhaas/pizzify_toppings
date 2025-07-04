@@ -35,7 +35,7 @@ export function FeaturesSection() {
             Why Choose <span className="text-neutral-400">Pizzify</span>
           </h2>
           <p className="text-xl text-neutral-400 font-light max-w-3xl mx-auto leading-relaxed">
-            We're not just another pizza place. We're artisans dedicated to crafting the perfect slice using traditional
+            We&apos;re not just another pizza place. We&apos;re artisans dedicated to crafting the perfect slice using traditional
             methods and premium ingredients.
           </p>
         </div>

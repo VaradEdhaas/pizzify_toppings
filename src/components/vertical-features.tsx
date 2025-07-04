@@ -45,7 +45,7 @@ export function VerticalFeatures() {
               US?
             </div>
             <p className="text-xl text-neutral-400 font-light leading-relaxed max-w-lg">
-              We don't just make pizza. We craft experiences. Every ingredient, every technique, every moment is
+              We don&apos;t just make pizza. We craft experiences. Every ingredient, every technique, every moment is
               designed to deliver perfection.
             </p>
           </div>

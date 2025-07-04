@@ -53,7 +53,7 @@ export default function NotFound() {
                 <div className="text-center">
                   <h3 className="text-4xl md:text-6xl font-extralight text-white mb-6 tracking-wide">Page Not Found</h3>
                   <p className="text-lg md:text-xl text-neutral-400 font-light max-w-2xl mx-auto leading-relaxed">
-                    The page you're looking for seems to have vanished into thin air. Don't worry, even the best pizzas
+                    The page you&apos;re looking for seems to have vanished into thin air. Don&apos;t worry, even the best pizzas
                     sometimes get lost on delivery.
                   </p>
                 </div>
@@ -65,19 +65,19 @@ export default function NotFound() {
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16">
             <Button
               className="w-full rounded-md sm:w-auto h-14 px-8 bg-white text-black hover:bg-neutral-100 font-normal transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98] text-base"
-              radius="lg"
+              radius="large"
               startContent={<Home className="h-4 w-4" />}
-              onPress={handleGoHome}
+              onClick={handleGoHome}
             >
               Back to Home
             </Button>
 
             <Button
-              variant="flat"
+              variant="surface"
               className="w-full rounded-md sm:w-auto h-14 px-8 bg-white/[0.03] border border-white/[0.1] text-white hover:bg-white/[0.05] transition-all duration-300 font-light text-base"
-              radius="lg"
+              radius="large"
               startContent={<ArrowLeft className="h-4 w-4" />}
-              onPress={handleGoBack}
+              onClick={handleGoBack}
             >
               Go Back
             </Button>

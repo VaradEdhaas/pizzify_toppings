@@ -73,7 +73,7 @@ export function ImmersiveFeatures() {
             transition={{ duration: 0.8, delay: 0.2 }}
             className="text-xl text-neutral-400 font-light max-w-3xl mx-auto leading-relaxed"
           >
-            We don't just make pizza. We craft experiences that bring people together, one perfect slice at a time.
+            We don&apos;t just make pizza. We craft experiences that bring people together, one perfect slice at a time.
           </motion.p>
         </div>
 

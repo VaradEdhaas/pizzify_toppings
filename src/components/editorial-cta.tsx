@@ -13,7 +13,7 @@ export function EditorialCTA() {
         </div>
 
         <p className="text-2xl text-neutral-400 font-light mb-16 leading-relaxed max-w-2xl mx-auto">
-          Don't wait. Order now and experience the difference that passion and quality make.
+          Don&apos;t wait. Order now and experience the difference that passion and quality make.
         </p>
 
         <Button

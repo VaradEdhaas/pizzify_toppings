@@ -37,7 +37,7 @@ export function TestimonialsSection() {
             What Our <span className="text-neutral-400">Customers Say</span>
           </h2>
           <p className="text-xl text-neutral-400 font-light max-w-3xl mx-auto leading-relaxed">
-            Don't just take our word for it. Here's what pizza lovers across the city are saying about Pizzify.
+            Don&apos;t just take our word for it. Here&apos;s what pizza lovers across the city are saying about Pizzify.
           </p>
         </div>
 

@@ -64,6 +64,7 @@ export interface ButtonProps
   VariantProps<typeof buttonVariants> {
   asChild?: boolean
   loading?: boolean
+  startContent?: React.ReactNode
 }
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
@@ -96,6 +97,9 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       >
         {loading && (
           <Loader2 className="mr-2 h-4 w-4 animate-spin" aria-hidden="true" />
+        )}
+        {!loading && props.startContent && (
+          <span className="mr-2">{props.startContent}</span>
         )}
         {children}
       </Comp>

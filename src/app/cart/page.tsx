@@ -168,7 +168,7 @@ export default function CartPage() {
     if (!hydrated) return null;
     if (!userId) return <EmptyState message="Please log in to view your cart." />;
     if (isLoading) return <EmptyState message="Loading cart..." />;
-    if (!localCart.length) return <EmptyState message="Looks like your cart's on a diet! Go to the menu and add some tasty items 🍕🛒" />;
+    if (!localCart.length) return <EmptyState message="Looks like your cart&apos;s on a diet! Go to the menu and add some tasty items 🍕🛒" />;
 
     const words = [
         {
@@ -208,7 +208,7 @@ export default function CartPage() {
                         </div>
                         <TypewriterEffectSmooth words={words} />
                         <p className="text-lg text-white/40 font-light max-w-2xl mx-auto">
-                            Review your selected items below and proceed when you're ready. Add, remove, or adjust quantities as needed.
+                            Review your selected items below and proceed when you&apos;re ready. Add, remove, or adjust quantities as needed.
                         </p>
                     </motion.div>
                 </div>
