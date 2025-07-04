@@ -18,61 +18,60 @@ import {
 import apiService from "@/helper/apiService";
 import { toast } from "react-toastify";
 import { ProductForm } from "./ProductForm";
+import Image from "next/image";
+import { Product, ProductFormValues } from "@/types/product";
 
 const Productpage = () => {
   const [activeCategory, setActiveCategory] = useState("food");
-  const [searchQuery, setSearchQuery] = useState("");
   const [openDialog, setOpenDialog] = useState(false);
-  const [editProduct, setEditProduct] = useState<any>(null);
-  const [productToDelete, setProductToDelete] = useState<any>(null);
+  const [editProduct, setEditProduct] = useState<Product | null>(null);
+  const [productToDelete, setProductToDelete] = useState<Product | null>(null);
 
   const { data = [], refetch } = useProducts();
 
   const filteredItems = useMemo(() => {
-    return data.filter(
-      (item) =>
-        item.category === activeCategory &&
-        item.name.toLowerCase().includes(searchQuery.toLowerCase())
-    );
-  }, [data, activeCategory, searchQuery]);
+    return data.filter((item) => item.category === activeCategory);
+  }, [data, activeCategory]);
 
-  const handleCreateProduct = async (values: any) => {
-    const formData = new FormData();
+  const handleCreateProduct = async (values: ProductFormValues) => {
     try {
-      Object.entries(values).forEach(([key, value]) => {
-        if (key === "imageUrl" && value) {
-          formData.append("imageUrl", value as File);
+      const formData = new FormData();
+      for (const [key, value] of Object.entries(values)) {
+        if (key === "imageUrl" && value instanceof File) {
+          formData.append("imageUrl", value);
         } else {
-          formData.append(key, value as string);
+          formData.append(key, value);
         }
-      });
+      }
+
       await apiService.createProduct(formData);
       toast.success("Your product has been added successfully in the inventory!");
       refetch();
       setOpenDialog(false);
-    } catch (error: any) {
-      toast.error(error?.message || "Something went wrong.");
+    } catch (error) {
+      toast.error((error as Error)?.message || "Something went wrong.");
       console.error(error);
     }
   };
 
-  const handleUpdateProduct = async (id: string, values: any) => {
-    const formData = new FormData();
+  const handleUpdateProduct = async (id: string, values: ProductFormValues) => {
     try {
-      Object.entries(values).forEach(([key, value]) => {
-        if (key === "imageUrl" && value) {
-          formData.append("imageUrl", value as File);
+      const formData = new FormData();
+      for (const [key, value] of Object.entries(values)) {
+        if (key === "imageUrl" && value instanceof File) {
+          formData.append("imageUrl", value);
         } else {
-          formData.append(key, value as string);
+          formData.append(key, value);
         }
-      });
+      }
+
       await apiService.updateProduct(id, formData);
       toast.success("Product updated successfully!");
       refetch();
       setEditProduct(null);
       setOpenDialog(false);
-    } catch (error: any) {
-      toast.error(error?.message || "Something went wrong.");
+    } catch (error) {
+      toast.error((error as Error)?.message || "Something went wrong.");
       console.error(error);
     }
   };
@@ -83,7 +82,7 @@ const Productpage = () => {
       await apiService.deleteProduct(productToDelete._id);
       toast.success("Product deleted successfully.");
       refetch();
-    } catch (error: any) {
+    } catch (error) {
       toast.error("Failed to delete product.");
       console.error(error);
     } finally {
@@ -94,7 +93,10 @@ const Productpage = () => {
   const handleEdit = async (id: string) => {
     try {
       const product = await apiService.getProductById(id);
-      setEditProduct(product);
+      setEditProduct({
+        ...product,
+        price: Number(product.price),
+      });
       setOpenDialog(true);
     } catch (error) {
       toast.error("Failed to load product for editing.");
@@ -164,22 +166,31 @@ const Productpage = () => {
                 initialValues={
                   editProduct
                     ? {
-                      name: editProduct.name,
-                      price: editProduct.price,
-                      description: editProduct.description,
-                      category: editProduct.category,
-                      rating: editProduct.rating,
-                      review: editProduct.review,
-                      imageUrl: editProduct.imageUrl,
+                      name: editProduct.name ?? "",
+                      price: editProduct.price?.toString() ?? "",
+                      description: editProduct.description ?? "",
+                      category: editProduct.category ?? "",
+                      rating: editProduct.rating?.toString() ?? "",
+                      review: editProduct.review?.toString() ?? "",
+                      imageUrl: editProduct.imageUrl ?? "",
                     }
                     : undefined
                 }
                 isEditMode={!!editProduct}
-                onSubmit={(values) =>
-                  editProduct
-                    ? handleUpdateProduct(editProduct._id, values)
-                    : handleCreateProduct(values)
-                }
+                onSubmit={async (values) => {
+                  const formatted = {
+                    ...values,
+                    price: Number(values.price),
+                    rating: Number(values.rating),
+                    review: Number(values.review),
+                    imageUrl: values.imageUrl ?? undefined,
+                  };
+                  if (editProduct) {
+                    await handleUpdateProduct(editProduct._id, formatted);
+                  } else {
+                    await handleCreateProduct(formatted);
+                  }
+                }}
                 closeDialog={handleDialogClose}
               />
             </DialogContent>
@@ -190,7 +201,13 @@ const Productpage = () => {
           {filteredItems.map((item) => (
             <div key={item._id} className="rounded-2xl p-4 backdrop-blur-lg bg-white/5 border border-white/10 shadow-lg text-white flex flex-col justify-between">
               {item.imageUrl ? (
-                <img src={item.imageUrl} alt={item.name} className="w-full h-48 object-contain" />
+                <Image
+                  src={item.imageUrl}
+                  alt={item.name}
+                  width={400}
+                  height={200}
+                  className="w-full h-48 object-contain rounded-md"
+                />
               ) : (
                 <div className="flex items-center justify-center w-full h-48 text-6xl bg-white/5">🍕</div>
               )}
@@ -217,7 +234,6 @@ const Productpage = () => {
           ))}
         </div>
 
-        {/* Confirmation Dialog */}
         <Dialog open={!!productToDelete} onOpenChange={() => setProductToDelete(null)}>
           <DialogContent className="bg-neutral-900 text-white p-6 rounded-2xl shadow-2xl max-w-md w-full">
             <DialogHeader>

@@ -10,6 +10,7 @@ import {
     SelectValue,
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
+import Image from "next/image";
 
 const inputClassNames = {
     base: "w-full",
@@ -35,19 +36,21 @@ const inputClassNames = {
     ],
 };
 
+export interface ProductFormValues {
+    name: string;
+    price: string;
+    description: string;
+    category: string;
+    rating: string;
+    review: string;
+    imageUrl: File | string | null;
+}
+
 interface ProductFormProps {
     activeCategory: string;
-    onSubmit: (values: any) => Promise<void>;
+    onSubmit: (values: ProductFormValues) => Promise<void>;
     closeDialog: () => void;
-    initialValues?: {
-        name: string;
-        price: string;
-        description: string;
-        category: string;
-        rating: string;
-        review: string;
-        imageUrl: File | string | null;
-    };
+    initialValues?: ProductFormValues;
     isEditMode?: boolean;
 }
 
@@ -58,7 +61,7 @@ export const ProductForm = ({
     initialValues,
     isEditMode = false,
 }: ProductFormProps) => {
-    const defaultValues = {
+    const defaultValues: ProductFormValues = {
         name: "",
         price: "",
         description: "",
@@ -168,10 +171,12 @@ export const ProductForm = ({
                         </label>
                         {isEditMode && typeof initialValues?.imageUrl === "string" && (
                             <div className="mb-2">
-                                <img
+                                <Image
                                     src={initialValues.imageUrl}
-                                    alt="Current"
-                                    className="h-32 rounded-md border border-white/10 object-contain"
+                                    alt="Current Product"
+                                    width={128}
+                                    height={128}
+                                    className="rounded-md border border-white/10 object-contain"
                                 />
                                 <p className="text-xs text-white/50 mt-1">Current image preview</p>
                             </div>
@@ -183,7 +188,7 @@ export const ProductForm = ({
                                 accept="image/*"
                                 title="Upload product image"
                                 onChange={(event) =>
-                                    setFieldValue("imageUrl", event.currentTarget.files?.[0])
+                                    setFieldValue("imageUrl", event.currentTarget.files?.[0] || null)
                                 }
                                 className="peer block w-full text-sm text-white file:mr-4 file:py-2 file:px-4
                   file:rounded-md file:border-0 file:text-sm file:font-semibold
