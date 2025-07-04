@@ -32,7 +32,7 @@ export default function RootLayout({
                 <GlobalSpinner />
                 <RazorpayScriptLoader />
                 <AppClientWrapper>
-                {children}
+                  {children}
                 </AppClientWrapper>
               </ToastProvider>
             </ReactQueryProvider>

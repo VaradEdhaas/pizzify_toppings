@@ -25,7 +25,7 @@ const menuItems = [
 
 export function SplitMenuSection() {
   return (
-    <section className="py-32 px-8 bg-black">
+    <section className="py-15 px-8 bg-black">
       <div className="max-w-8xl mx-auto">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-24">
           {/* Left - Menu Preview */}

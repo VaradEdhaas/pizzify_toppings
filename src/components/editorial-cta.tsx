@@ -6,7 +6,7 @@ import Link from "next/link"
 
 export function EditorialCTA() {
   return (
-    <section className="py-32 px-8 bg-black">
+    <section className="py-15 px-8 bg-black">
       <div className="max-w-4xl mx-auto text-center">
         <div className="text-6xl md:text-8xl lg:text-[10rem] font-black text-white mb-12 leading-none tracking-tighter">
           HUNGRY?

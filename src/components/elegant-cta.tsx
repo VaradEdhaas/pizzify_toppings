@@ -11,7 +11,7 @@ export function ElegantCTA() {
 balance of tradition, quality, and taste.Your perfect slice awaits`;
 
   return (
-    <section className="py-32 px-8 bg-black relative overflow-hidden">
+    <section className="py-15 px-8 bg-black relative overflow-hidden">
       {/* Subtle Background Pattern */}
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:48px_48px]" />
 
@@ -37,29 +37,6 @@ balance of tradition, quality, and taste.Your perfect slice awaits`;
           <div className="w-32 h-px bg-gradient-to-r from-white/30 to-transparent mx-auto mb-12"></div>
           <div className="my-10 w-full font-light">
             <TextGenerateEffect words={words} />
-          </div>
-
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
-            <Button
-              as={Link}
-              href="/signup"
-              className="h-16 px-12 bg-white text-black hover:bg-neutral-100 font-light transition-all duration-500 text-lg tracking-wide group"
-              radius="none"
-              endContent={
-                <ArrowRight className="h-5 w-5 ml-2 group-hover:translate-x-1 transition-transform duration-300" />
-              }
-            >
-              Order Now
-            </Button>
-            <Button
-              as={Link}
-              href="/menu"
-              variant="bordered"
-              className="h-16 px-12 border-white/20 text-white hover:border-white/40 hover:bg-white/5 font-light transition-all duration-500 text-lg tracking-wide backdrop-blur-sm"
-              radius="none"
-            >
-              View Menu
-            </Button>
           </div>
         </motion.div>
       </div>

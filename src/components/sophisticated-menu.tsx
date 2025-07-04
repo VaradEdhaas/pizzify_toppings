@@ -9,42 +9,35 @@ import { AuroraBackground } from "./ui/aurora-background";
 
 const fusionPizzas = [
   {
-    name: "Tandoori Margherita",
+    name: "Tandoori Paneer",
     description:
-      "San Marzano tomatoes, paneer tikka, fresh basil, tandoori spices, mint chutney drizzle",
-    price: "28",
+      "An explosion of tandoori spice and cheesy delight — this slice brings the sizzle!",
+    price: "369",
     rating: "4.9",
     time: "15min",
     popular: true,
     spiceLevel: "Medium",
   },
   {
-    name: "Butter Chicken Supreme",
+    name: "Puneri Mastani",
     description:
-      "Creamy tomato base, tender chicken tikka, mozzarella, fresh coriander, naan crust",
-    price: "35",
+      "Sweet like Mastani, spicy like a Pune lafda — this slice has it all!",
+    price: "199",
     rating: "4.8",
     time: "18min",
     premium: true,
     spiceLevel: "Mild",
   },
   {
-    name: "Paneer Makhani Royale",
+    name: "Mumbai Matka",
     description:
-      "Rich makhani sauce, grilled paneer, bell peppers, caramelized onions, kasuri methi",
-    price: "32",
+      "The soul of Mumbai’s pav bhaji, now on a perfect pizza canvas.",
+    price: "349",
     rating: "4.9",
     time: "16min",
     chef: true,
     spiceLevel: "Medium",
   },
-];
-
-const fusionCategories = [
-  { name: "Desi Classics", count: "8 items", icon: "🇮🇳" },
-  { name: "Italian Fusion", count: "6 items", icon: "🇮🇹" },
-  { name: "Spice Masters", count: "5 items", icon: "🌶️" },
-  { name: "Sweet Endings", count: "4 items", icon: "🍰" },
 ];
 
 export function SophisticatedMenu() {
@@ -55,7 +48,7 @@ export function SophisticatedMenu() {
     <AuroraBackground>
       <section
         ref={ref}
-        className="relative z-10 py-32 px-8 max-w-7xl mx-auto"
+        className="relative z-10 py-10 px-8 max-w-7xl mx-auto"
       >
         {/* Header */}
         <motion.div
@@ -122,20 +115,19 @@ export function SophisticatedMenu() {
                 whileHover={{ y: -4 }}
               >
                 {/* Badge */}
-                <div className="flex justify-between items-start mb-6">
-                  <div className="text-4xl">🍕</div>
+                <div className="flex justify-end items-start mb-6">
                   {pizza.popular && (
-                    <div className="px-3 py-1 bg-white/[0.05] border border-white/[0.1] text-white/60 text-xs font-light rounded-full">
+                    <div className="px-3 py-1 text-amber-300/60 bg-white/[0.05] border border-white/[0.1] text-xs font-light rounded-full">
                       Popular
                     </div>
                   )}
                   {pizza.premium && (
-                    <div className="px-3 py-1 bg-white/[0.05] border border-white/[0.1] text-white/60 text-xs font-light rounded-full">
+                    <div className="px-3 py-1 text-amber-300/60 bg-white/[0.05] border border-white/[0.1] text-xs font-light rounded-full">
                       Premium
                     </div>
                   )}
                   {pizza.chef && (
-                    <div className="px-3 py-1 bg-white/[0.05] border border-white/[0.1] text-white/60 text-xs font-light rounded-full">
+                    <div className="px-3 py-1 text-amber-300/60 bg-white/[0.05] border border-white/[0.1] text-xs font-light rounded-full">
                       Chef&apos;s Choice
                     </div>
                   )}
@@ -164,51 +156,14 @@ export function SophisticatedMenu() {
                 </div>
 
                 <div className="flex items-center justify-between">
-                  <span className="text-2xl font-light text-white">
+                  <span className="text-2xl font-light text-green-400/60">
                     ₹{pizza.price}
                   </span>
-                  <Button
-                    size="sm"
-                    className="bg-white text-black hover:bg-white/90 font-normal transition-all duration-300"
-                    radius="none"
-                  >
-                    Add
-                  </Button>
                 </div>
               </motion.div>
             </motion.div>
           ))}
         </div>
-
-        {/* Categories */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.8, delay: 1.2 }}
-          className="mb-16"
-        >
-          <h3 className="text-2xl font-light text-white text-center mb-12 tracking-wide">
-            Categories
-          </h3>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-            {fusionCategories.map((category, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={isInView ? { opacity: 1, scale: 1 } : {}}
-                transition={{ duration: 0.6, delay: 1.4 + index * 0.1 }}
-                whileHover={{ scale: 1.02, y: -2 }}
-                className="bg-white/[0.01] border border-white/[0.06] rounded-xl p-6 text-center backdrop-blur-2xl transition-all duration-500 cursor-pointer hover:bg-white/[0.02] hover:border-white/[0.1]"
-              >
-                <div className="text-2xl mb-3">{category.icon}</div>
-                <h4 className="text-white/80 font-light mb-2">{category.name}</h4>
-                <p className="text-white/30 text-sm font-light">
-                  {category.count}
-                </p>
-              </motion.div>
-            ))}
-          </div>
-        </motion.div>
 
         {/* CTA Button */}
         <motion.div
@@ -221,7 +176,7 @@ export function SophisticatedMenu() {
             as={Link}
             href="/menu"
             size="lg"
-            className="h-12 px-8 bg-white text-black hover:bg-white/90 font-normal transition-all duration-300 tracking-wide"
+            className="h-12 px-8 rounded-md bg-white text-black hover:bg-white/90 font-normal transition-all duration-300 tracking-wide"
             radius="none"
             endContent={<ArrowRight className="h-4 w-4 ml-2" />}
           >
