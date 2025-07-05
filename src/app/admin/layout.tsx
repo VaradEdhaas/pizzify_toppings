@@ -1,4 +1,3 @@
-import React from "react";
 import ClientAdminLayout from "./ClientAdminLayout";
 
 export const metadata = {
