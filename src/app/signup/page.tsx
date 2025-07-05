@@ -1,14 +1,26 @@
-import type { Metadata } from "next"
+"use client";
+
 import Link from "next/link"
 import { SignupForm } from "@/components/premium-signup-form"
 import { SubtleBackground } from "@/components/subtle-background"
 
-export const metadata: Metadata = {
-  title: "Join Pizzify",
-  description: "Create your Pizzify account",
-}
-
 export default function SignupPage() {
+
+  const initialValues = {
+    fullname: "",
+    email: "",
+    password: "",
+    phone: "",
+    address: "",
+    city: "",
+    zipcode: "",
+    marketing: false,
+  }
+
+  const handleSignup = async (values: typeof initialValues, { resetForm }: { resetForm: () => void }) => {
+    resetForm()
+  }
+
   return (
     <div className="min-h-screen relative overflow-hidden bg-black">
       <SubtleBackground />
@@ -26,7 +38,7 @@ export default function SignupPage() {
                 <p className="text-neutral-400 text-sm font-light">Create your account and start ordering</p>
               </div>
 
-              <SignupForm />
+              <SignupForm initialValues={initialValues} onSubmit={handleSignup} />
 
               <div className="mt-8 text-center">
                 <p className="text-neutral-400 text-sm font-light">

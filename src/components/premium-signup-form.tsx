@@ -1,16 +1,15 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState } from "react"
 import { Button, Input, Progress } from "@heroui/react"
 import { EyeFilledIcon, EyeSlashFilledIcon } from "@heroui/shared-icons"
-import { User, Mail, Phone, Lock, Check, ArrowRight } from "lucide-react"
+import { User, Mail, Phone, Lock, ArrowRight } from "lucide-react"
 import { toast } from "react-toastify"
 import { Formik, Form, ErrorMessage } from "formik"
 import * as Yup from "yup"
 import { useAuth } from "./context/AuthContext"
 import apiService from "@/helper/apiService"
 import { useRouter } from "next/navigation"
-import { Checkbox } from "./ui/checkbox"
 
 type SignupFormProps = {
   initialValues: {
