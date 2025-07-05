@@ -2,6 +2,7 @@ import type { Metadata } from "next"
 import Link from "next/link"
 import { LoginForm } from "@/components/premium-login-form"
 import { GeometricBackground } from "@/components/geometric-background"
+// import { PhoneLoginForm } from "@/components/OtpLogin"
 
 export const metadata: Metadata = {
   title: "Sign In - Pizzify",
@@ -61,6 +62,7 @@ export default function LoginPage() {
             {/* Form Container */}
             <div className="bg-white/[0.03] backdrop-blur-2xl rounded-3xl p-8 border border-white/[0.05] shadow-2xl">
               <LoginForm />
+              {/* <PhoneLoginForm /> */}
             </div>
 
             {/* Footer */}
