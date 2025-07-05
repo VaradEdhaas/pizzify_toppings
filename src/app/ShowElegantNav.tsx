@@ -8,7 +8,7 @@ export default function AppClientWrapper({ children }: { children: React.ReactNo
     const { currentUser } = useAuth();
     const pathname = usePathname();
 
-    const hideNavPaths = ["/login", "/signup"];
+    const hideNavPaths = ["/login", "/signup", "/admin/products", "/admin/user", "/admin/dashboard"];
     const shouldHideNav = hideNavPaths.includes(pathname);
 
     const role = currentUser?.user?.role;

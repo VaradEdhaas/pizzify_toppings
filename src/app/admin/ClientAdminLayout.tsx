@@ -25,9 +25,7 @@ const floatingShapes = [
 ]
 
 interface ClientAdminLayoutProps {
-    children: React.ReactNode;
-    selected: string;
-    onSelect: (page: string) => void;
+  children: React.ReactNode;
 }
 
 export default function ClientAdminLayout({ children }: ClientAdminLayoutProps) {

@@ -1,15 +1,10 @@
+import React from "react";
 import ClientAdminLayout from "./ClientAdminLayout";
 
-interface AdminLayoutProps {
-  children: React.ReactNode;
-  selected: string;
-  onSelect: (page: string) => void;
-}
+export const metadata = {
+  title: "Admin Dashboard",
+};
 
-export default function AdminLayout({ children, selected, onSelect }: AdminLayoutProps) {
-  return (
-    <ClientAdminLayout selected={selected} onSelect={onSelect}>
-      {children}
-    </ClientAdminLayout>
-  );
+export default function Layout({ children }: { children: React.ReactNode }) {
+  return <ClientAdminLayout>{children}</ClientAdminLayout>;
 }
