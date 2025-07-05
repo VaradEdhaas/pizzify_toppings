@@ -5,8 +5,6 @@ import { useState } from "react"
 import { motion } from "framer-motion"
 import { cn } from "@/lib/utils"
 
-type Direction = "TOP" | "LEFT" | "BOTTOM" | "RIGHT"
-
 export function HoverBorderGradient({
   children,
   containerClassName,
@@ -25,25 +23,8 @@ export function HoverBorderGradient({
   } & React.HTMLAttributes<HTMLElement>
 >) {
   const [hovered, setHovered] = useState<boolean>(false)
-  const [direction, setDirection] = useState<Direction>("TOP")
 
   const handleMouseEnter = (event: React.MouseEvent<HTMLDivElement>) => {
-    const { currentTarget } = event
-    const rect = currentTarget.getBoundingClientRect()
-    const { clientX, clientY } = event
-    const x = clientX - rect.left
-    const y = clientY - rect.top
-    const { width, height } = rect
-
-    if (x < width / 2 && y < height / 2) {
-      setDirection("TOP")
-    } else if (x >= width / 2 && y < height / 2) {
-      setDirection("RIGHT")
-    } else if (x >= width / 2 && y >= height / 2) {
-      setDirection("BOTTOM")
-    } else {
-      setDirection("LEFT")
-    }
     setHovered(true)
   }
 
@@ -71,9 +52,12 @@ export function HoverBorderGradient({
       )}
       {...props}
     >
-      <div className={cn("w-auto text-white z-10 bg-black px-4 py-2 rounded-[inherit]", className)}>{children}</div>
+      <div className={cn("w-auto text-white z-10 bg-black px-4 py-2 rounded-[inherit]", className)}>
+        {children}
+      </div>
+
       <motion.div
-        className={cn("flex-none inset-0 overflow-hidden absolute z-0 rounded-[inherit]")}
+        className="flex-none inset-0 overflow-hidden absolute z-0 rounded-[inherit]"
         style={{
           filter: "blur(2px)",
           position: "absolute",
@@ -93,7 +77,7 @@ export function HoverBorderGradient({
             rotate: clockwise ? 360 : -360,
           }}
           transition={{
-            duration: duration,
+            duration,
             ease: "linear",
             repeat: Number.POSITIVE_INFINITY,
           }}

@@ -1,6 +1,6 @@
 'use client'
 
-import { Listbox, ListboxItem, ListboxSection, Selection } from '@heroui/react'
+import { Listbox, ListboxItem, Selection } from '@heroui/react'
 import { useState } from 'react'
 
 export interface ListBoxOption {

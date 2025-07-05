@@ -20,8 +20,8 @@ export const TextGenerateEffect = ({
   const wordsArray = words.split(" ");
 
   useEffect(() => {
-    setHasMounted(true); // Triggered after hydration
-  }, []);
+    setHasMounted(true);
+  }, [animate]);
 
   useEffect(() => {
     if (hasMounted) {
@@ -37,7 +37,7 @@ export const TextGenerateEffect = ({
         }
       );
     }
-  }, [hasMounted]);
+  }, [hasMounted, animate]);
 
   const renderWords = () => (
     <motion.div ref={scope}>

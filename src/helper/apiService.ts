@@ -1,7 +1,5 @@
 import axios, { AxiosResponse } from "axios";
 import { BASE_URL } from "./constantProperties";
-import { useContext } from "react";
-import AuthContext from "@/components/context/AuthContext";
 
 interface User {
   _id: string;
