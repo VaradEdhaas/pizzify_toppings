@@ -41,7 +41,7 @@ export default function HomePage() {
     };
 
     return (
-      <AdminLayout selected={selectedPage} onSelect={setSelectedPage}>
+      <AdminLayout>
         {getPageComponent()}
       </AdminLayout>
     );

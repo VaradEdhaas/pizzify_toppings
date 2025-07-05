@@ -1,9 +1,6 @@
-import ClientAdminLayout from "./ClientAdminLayout";
+import type { ReactNode } from "react";
+import ClientAdminLayout from "./ClientAdminLayout.client";
 
-export const metadata = {
-  title: "Admin Dashboard",
-};
-
-export default function Layout({ children }: { children: React.ReactNode }) {
+export default function Layout({ children }: { children: ReactNode }) {
   return <ClientAdminLayout>{children}</ClientAdminLayout>;
 }

@@ -1,52 +1,49 @@
-"use client"
+// src/app/admin/ClientAdminLayout.client.tsx
+"use client";
 
-import { usePathname, useRouter } from "next/navigation"
-import { useState, useEffect } from "react"
-import { LogOut, TrendingUp, User, Archive } from "lucide-react"
-import { toast } from "react-toastify"
-import apiService from "@/helper/apiService"
-import { Button } from "@heroui/react"
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { motion } from "framer-motion"
-import { Spotlight } from "@/components/ui/spotlight"
-import { BackgroundBeamsWithCollision } from "@/components/ui/background-beams-with-collision"
-import { SparklesCore } from "@/components/ui/sparkles"
+import { usePathname, useRouter } from "next/navigation";
+import { useState, useEffect } from "react";
+import { LogOut, TrendingUp, User, Archive } from "lucide-react";
+import { toast } from "react-toastify";
+import apiService from "@/helper/apiService";
+import { Button } from "@heroui/react";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { motion } from "framer-motion";
+import { Spotlight } from "@/components/ui/spotlight";
+import { BackgroundBeamsWithCollision } from "@/components/ui/background-beams-with-collision";
+import { SparklesCore } from "@/components/ui/sparkles";
 
 const sidebarItems = [
     { key: "/admin/dashboard", label: "Dashboard", icon: <TrendingUp className="mr-2 w-4 h-4" /> },
     { key: "/admin/user", label: "Users", icon: <User className="mr-2 w-4 h-4" /> },
     { key: "/admin/products", label: "Products", icon: <Archive className="mr-2 w-4 h-4" /> },
-]
+];
 
 const floatingShapes = [
     { key: "shape1", x: 100, y: 200, rotate: 0, duration: 6, delay: 0 },
     { key: "shape2", x: 300, y: 150, rotate: 45, duration: 8, delay: 1 },
     { key: "shape3", x: 500, y: 250, rotate: 90, duration: 7, delay: 0.5 },
-]
+];
 
-interface ClientAdminLayoutProps {
-  children: React.ReactNode;
-}
-
-export default function ClientAdminLayout({ children }: ClientAdminLayoutProps) {
-    const pathname = usePathname()
-    const router = useRouter()
-    const [activeTab, setActiveTab] = useState(pathname)
+export default function ClientAdminLayout({ children }: { children: React.ReactNode }) {
+    const pathname = usePathname();
+    const router = useRouter();
+    const [activeTab, setActiveTab] = useState(pathname);
 
     useEffect(() => {
-        setActiveTab(pathname)
-    }, [pathname])
+        setActiveTab(pathname);
+    }, [pathname]);
 
     const handleTabChange = (value: string) => {
-        setActiveTab(value)
-        router.push(value)
-    }
+        setActiveTab(value);
+        router.push(value);
+    };
 
     const handleLogout = async () => {
-        await apiService.logoutUser()
-        toast.success("Logged out")
-        router.push("/login")
-    }
+        await apiService.logoutUser();
+        toast.success("Logged out");
+        router.push("/login");
+    };
 
     return (
         <div className="min-h-screen bg-black relative overflow-hidden text-white">
@@ -124,5 +121,5 @@ export default function ClientAdminLayout({ children }: ClientAdminLayoutProps) 
                 </div>
             </BackgroundBeamsWithCollision>
         </div>
-    )
+    );
 }
