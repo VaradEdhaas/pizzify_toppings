@@ -2,12 +2,6 @@ import apiService from '@/helper/apiService';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'react-toastify';
 
-interface AddToCartPayload {
-    userId: string;
-    productId: string;
-    quantity: number;
-}
-
 export function useCart(userId: string) {
     const queryClient = useQueryClient();
 
@@ -18,11 +12,13 @@ export function useCart(userId: string) {
     });
 
     const addMutation = useMutation({
-        mutationFn: ({ userId, productId, quantity }: AddToCartPayload) =>
+        mutationFn: ({ userId, productId, quantity }: { userId: string; productId: string; quantity: number; silent?: boolean; }) =>
             apiService.addToCart({ userId, productId, quantity }),
-        onSuccess: () => {
+        onSuccess: (_data, variables) => {
             queryClient.invalidateQueries({ queryKey: ['cart', userId] });
-            toast.success('Product added to cart!');
+            if (!variables?.silent) {
+                toast.success("Product added to cart");
+            }
         },
     });
 
@@ -42,11 +38,33 @@ export function useCart(userId: string) {
         },
     });
 
+    const incrementMutation = useMutation({
+        mutationFn: (productId: string) => apiService.incrementCartItem(userId, productId),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['cart', userId] });
+        },
+        onError: () => {
+            toast.error("Failed to increment quantity.");
+        }
+    });
+
+    const decrementMutation = useMutation({
+        mutationFn: (productId: string) => apiService.decrementCartItem(userId, productId),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['cart', userId] });
+        },
+        onError: () => {
+            toast.error("Failed to decrement quantity.");
+        }
+    });
+
     return {
         cart,
         isLoading,
         addToCart: addMutation.mutate,
         removeFromCart: removeMutation.mutate,
-        clearCartMutation: clearCartMutation.mutate
+        clearCartMutation: clearCartMutation.mutate,
+        incrementQuantity: incrementMutation.mutate,
+        decrementQuantity: decrementMutation.mutate,
     };
 }

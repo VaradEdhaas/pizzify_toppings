@@ -26,16 +26,12 @@ export default function CartPage() {
     const { currentUser } = useAuth();
     const userId = typeof window !== "undefined" ? currentUser?.user?._id : null;
 
-    const { cart, isLoading, addToCart, removeFromCart, clearCartMutation } = useCart(userId || "");
-    const [localCart, setLocalCart] = useState<any[]>([]);
+    const { cart, isLoading, incrementQuantity, decrementQuantity, removeFromCart, clearCartMutation } = useCart(userId || "");
     const [hydrated, setHydrated] = useState(false);
     const cartRef = useRef(null);
     const router = useRouter();
 
     useEffect(() => setHydrated(true), []);
-    useEffect(() => {
-        if (cart?.products) setLocalCart(cart.products);
-    }, [cart]);
 
     useEffect(() => {
         if (hydrated && cartRef.current) {
@@ -51,31 +47,21 @@ export default function CartPage() {
                 }
             );
         }
-    }, [hydrated, localCart]);
+    }, [hydrated, cart]);
 
     const incrementQty = (item: any) => {
         if (!userId) return;
-        addToCart({
-            userId,
-            productId: item.productId._id,
-            quantity: item.quantity + 1,
-        });
+        incrementQuantity(item.productId._id);
     };
 
     const decrementQty = (item: any) => {
         if (!userId) return;
-        item.quantity === 1
-            ? removeFromCart(item.productId._id)
-            : addToCart({
-                userId,
-                productId: item.productId._id,
-                quantity: item.quantity - 1,
-            });
+        decrementQuantity(item.productId._id);
     };
 
     const getTotalPrice = () =>
-        localCart.reduce(
-            (acc, item) => acc + item.quantity * (item.productId?.price || 0),
+        (cart?.products || []).reduce(
+            (acc, item) => acc + item.quantity * (item?.productId?.price || 0),
             0
         );
 
@@ -106,7 +92,7 @@ export default function CartPage() {
                         });
 
                         if (verification.success) {
-                            const formattedProducts = localCart.map((item: any) => ({
+                            const formattedProducts = (cart?.products || []).map((item: any) => ({
                                 productId: item.productId,
                                 quantity: item.quantity,
                             }));
@@ -262,7 +248,7 @@ export default function CartPage() {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-10 max-w-7xl mx-auto mb-15">
                 {/* Left - Cart Items */}
                 <div className="md:col-span-2 space-y-5" ref={cartRef}>
-                    {localCart.map((item) =>
+                    {(cart?.products || []).map((item) =>
                         item.productId ? (
                             <Card
                                 key={item.productId._id}
@@ -331,7 +317,7 @@ export default function CartPage() {
                     <Separator className="bg-white/10 mb-4" />
                     <div className="flex justify-between text-sm text-white/70 mb-2">
                         <span>Total Items</span>
-                        <span>{localCart.length}</span>
+                        <span>{cart?.products.length}</span>
                     </div>
                     <div className="flex justify-between text-base font-semibold text-green-400 mb-6">
                         <span>Total Price</span>

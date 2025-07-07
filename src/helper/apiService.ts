@@ -36,11 +36,19 @@ interface Product {
 }
 
 interface Cart {
+  _id: string;
   userId: string;
-  products: {
-    productId: Product;
+  products: Array<{
+    productId: {
+      _id: string;
+      name: string;
+      price: number;
+      imageUrl: string;
+    };
     quantity: number;
-  }[];
+  }>;
+  createdAt: string;
+  updatedAt: string;
 }
 interface AddToCartPayload {
   userId: string;
@@ -314,6 +322,23 @@ const apiService = {
     return response.data;
   },
 
+  incrementCartItem: async (userId: string, productId: string): Promise<Cart> => {
+    const response: AxiosResponse<Cart> = await axios.patch(
+      `${BASE_URL}/api/incrementCartItem/${userId}`,
+      { productId },
+      { withCredentials: true }
+    );
+    return response.data;
+  },
+
+  decrementCartItem: async (userId: string, productId: string): Promise<Cart> => {
+    const response: AxiosResponse<Cart> = await axios.patch(
+      `${BASE_URL}/api/decrementCartItem/${userId}`,
+      { productId },
+      { withCredentials: true }
+    );
+    return response.data;
+  },
   // ==================== Payment APIs ====================
 
   createRazorpayOrder: async (amount: number): Promise<RazorpayOrderResponse> => {
