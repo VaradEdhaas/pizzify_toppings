@@ -67,15 +67,43 @@ const UserOrdersPage = () => {
                     <h1 className="text-3xl font-bold">Your Orders</h1>
                     {!loading && orders.length > 0 && (
                         <p className="text-white/60 text-sm mt-1">
-                            You have placed <span className="font-semibold text-white">{orders.length}</span> order{orders.length > 1 ? "s" : ""}.
+                            You have placed{" "}
+                            <span className="font-semibold text-white">{orders.length}</span>{" "}
+                            order{orders.length > 1 ? "s" : ""}.
                         </p>
                     )}
                 </div>
 
                 {loading ? (
-                    <div className="space-y-4">
+                    <div className="space-y-6">
                         {[...Array(3)].map((_, idx) => (
-                            <Skeleton key={idx} className="w-full h-40 rounded-xl bg-muted/20" />
+                            <Card
+                                key={idx}
+                                className="bg-zinc-900 border border-white/10 rounded-xl p-5"
+                            >
+                                <CardHeader className="flex flex-col gap-2 mb-2">
+                                    <Skeleton className="h-5 w-48 bg-white/20" />
+                                </CardHeader>
+
+                                <CardContent className="space-y-4">
+                                    {/* Product avatars */}
+                                    <div className="flex items-center gap-3">
+                                        {[...Array(4)].map((__, i) => (
+                                            <Skeleton
+                                                key={i}
+                                                className="w-12 h-12 rounded-full bg-white/20"
+                                            />
+                                        ))}
+                                        <Skeleton className="w-12 h-12 rounded-full bg-white/20" />
+                                    </div>
+
+                                    {/* Footer */}
+                                    <div className="flex justify-between items-center border-t border-white/10 pt-4">
+                                        <Skeleton className="h-4 w-32 bg-white/20" />
+                                        <Skeleton className="h-5 w-20 bg-white/20" />
+                                    </div>
+                                </CardContent>
+                            </Card>
                         ))}
                     </div>
                 ) : orders.length === 0 ? (
@@ -107,9 +135,15 @@ const UserOrdersPage = () => {
                                             <AnimatedTooltip
                                                 items={order.items?.slice(0, 5).map((item, idx) => ({
                                                     id: `${order._id}-${idx}`,
-                                                    name: item?.name || item?.product?.name || "Unnamed",
+                                                    name:
+                                                        item?.name ||
+                                                        item?.product?.name ||
+                                                        "Unnamed",
                                                     designation: `Qty: ${item.quantity} × ₹${item.priceAtPurchase}`,
-                                                    image: item?.image || item?.product?.imageUrl || "/placeholder.png",
+                                                    image:
+                                                        item?.image ||
+                                                        item?.product?.imageUrl ||
+                                                        "/placeholder.png",
                                                 }))}
                                             />
                                         </div>

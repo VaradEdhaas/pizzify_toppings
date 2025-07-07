@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Menu, X, User } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -19,7 +19,13 @@ const navItems = [
 export function ElegantNav() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [profileMenuOpen, setProfileMenuOpen] = useState(false);
+  const [hasUser, setHasUser] = useState<boolean>(false);
   const router = useRouter();
+
+  useEffect(() => {
+    const storedUser = localStorage.getItem("currentUser");
+    setHasUser(!!storedUser);
+  }, []);
 
   const handleLogout = async () => {
     try {
@@ -93,14 +99,27 @@ export function ElegantNav() {
                   >
                     Orders
                   </Button>
-                  <Button
-                    fullWidth
-                    variant="light"
-                    className="justify-start text-white hover:bg-white/5"
-                    onPress={handleLogout}
-                  >
-                    Logout
-                  </Button>
+                  {hasUser ? (
+                    <Button
+                      fullWidth
+                      variant="light"
+                      className="justify-start text-white hover:bg-white/5"
+                      onPress={handleLogout}
+                    >
+                      Logout
+                    </Button>
+                  ) : (
+                    <Button
+                      as={Link}
+                      href="/login"
+                      fullWidth
+                      variant="light"
+                      className="justify-start text-white hover:bg-white/5"
+                      onPress={() => setProfileMenuOpen(false)}
+                    >
+                      Login
+                    </Button>
+                  )}
                 </motion.div>
               )}
             </AnimatePresence>
@@ -155,13 +174,25 @@ export function ElegantNav() {
                 >
                   Orders
                 </Button>
-                <Button
-                  variant="light"
-                  className="w-full justify-start text-white text-xl font-light hover:bg-white/5"
-                  onPress={handleLogout}
-                >
-                  Logout
-                </Button>
+                {hasUser ? (
+                  <Button
+                    variant="light"
+                    className="w-full justify-start text-white text-xl font-light hover:bg-white/5"
+                    onPress={handleLogout}
+                  >
+                    Logout
+                  </Button>
+                ) : (
+                  <Button
+                    as={Link}
+                    href="/login"
+                    variant="light"
+                    className="w-full justify-start text-white text-xl font-light hover:bg-white/5"
+                    onPress={() => setMobileMenuOpen(false)}
+                  >
+                    Login
+                  </Button>
+                )}
               </div>
             </div>
           </motion.div>

@@ -15,6 +15,7 @@ import apiService from "@/helper/apiService";
 import { toast } from "react-toastify";
 import Link from "next/link";
 import { DynamicBackgroundWrapper } from "@/components/layout/DynamicBackgroundWrapper";
+import { Skeleton } from "@/components/ui/skeleton";
 declare global {
     interface Window {
         Razorpay: any;
@@ -30,11 +31,6 @@ export default function CartPage() {
     const [hydrated, setHydrated] = useState(false);
     const cartRef = useRef(null);
     const router = useRouter();
-
-
-    const [floatingShapes, setFloatingShapes] = useState<
-        { key: string; x: number; y: number; rotate: number; duration: number; delay: number }[]
-    >([]);
 
     useEffect(() => setHydrated(true), []);
     useEffect(() => {
@@ -167,8 +163,6 @@ export default function CartPage() {
 
     if (!hydrated) return null;
     if (!userId) return <EmptyState message="Please log in to view your cart." />;
-    if (isLoading) return <EmptyState message="Loading cart..." />;
-    if (!localCart.length) return <EmptyState message="Looks like your cart&apos;s on a diet! Go to the menu and add some tasty items 🍕🛒" />;
 
     const words = [
         {
@@ -194,6 +188,56 @@ export default function CartPage() {
             className: "text-blue-500 dark:text-blue-500",
         },
     ];
+
+    if (isLoading) {
+        return (
+            <DynamicBackgroundWrapper>
+                <section className="pt-20 pb-16 px-8">
+                    <div className="max-w-7xl mx-auto text-center">
+                        <Skeleton className="h-8 w-60 mx-auto mb-4 bg-white/20" />
+                        <Skeleton className="h-5 w-80 mx-auto mb-2 bg-white/20" />
+                    </div>
+                </section>
+
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-10 max-w-7xl mx-auto mb-15">
+                    <div className="md:col-span-2 space-y-5">
+                        {[...Array(3)].map((_, idx) => (
+                            <Card key={idx} className="rounded-xl border-white/10 bg-white/5 backdrop-blur-md p-4">
+                                <div className="flex flex-col sm:flex-row sm:items-start gap-5">
+                                    <Skeleton className="w-full sm:w-28 h-28 rounded-xl bg-white/20" />
+
+                                    <div className="flex-1 w-full flex flex-col justify-center gap-3">
+                                        <Skeleton className="w-3/4 h-5 bg-white/60" />
+                                        <Skeleton className="w-1/4 h-4 bg-white/60" />
+
+                                        <div className="flex items-center gap-2 mt-2">
+                                            <Skeleton className="h-7 w-7 rounded bg-white/60" />
+                                            <Skeleton className="h-5 w-6 rounded bg-white/60" />
+                                            <Skeleton className="h-7 w-7 rounded bg-white/60" />
+                                        </div>
+                                    </div>
+
+                                    <div className="flex flex-col justify-between items-end gap-3 min-w-[80px]">
+                                        <Skeleton className="h-6 w-6 rounded bg-white/60" />
+                                        <Skeleton className="h-6 w-14 rounded bg-white/60" />
+                                    </div>
+                                </div>
+                            </Card>
+                        ))}
+                    </div>
+
+                    {/* Right Side - Order Summary Skeleton */}
+                    <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-xl p-6 h-fit shadow-lg">
+                        <Skeleton className="h-6 w-40 mb-4 bg-white/20" />
+                        <Separator className="bg-white/10 mb-4" />
+                        <Skeleton className="h-4 w-24 mb-2 bg-white/20" />
+                        <Skeleton className="h-4 w-32 mb-6 bg-white/20" />
+                        <Skeleton className="h-10 w-full bg-white/20" />
+                    </div>
+                </div>
+            </DynamicBackgroundWrapper>
+        );
+    }
 
     return (
         <DynamicBackgroundWrapper>
@@ -225,15 +269,13 @@ export default function CartPage() {
                                 className="rounded-xl border-white/10 bg-white/5 backdrop-blur-md transition hover:scale-[1.01]"
                             >
                                 <CardContent className="flex flex-col sm:flex-row sm:items-start justify-between gap-5 p-2 sm:p-5">
-                                    {/* Left - Product Image */}
                                     <img
                                         src={item.productId.imageUrl || "/placeholder.png"}
                                         alt={item.productId.name}
-                                        className="w-30 h-30 object-contain rounded-xl border shadow-sm"
+                                        className="w-full sm:w-28 h-28 object-contain rounded-xl border shadow-sm"
                                     />
 
-                                    {/* Middle - Name, Price, Quantity Controls */}
-                                    <div className="flex-1 flex flex-col justify-between">
+                                    <div className="flex-1 w-full flex flex-col items-center sm:items-start justify-center text-center sm:text-left">
                                         <div>
                                             <CardTitle className="text-base sm:text-lg font-medium text-white">
                                                 {item.productId.name}
@@ -263,18 +305,17 @@ export default function CartPage() {
                                         </div>
                                     </div>
 
-                                    {/* Right - Delete & Total Price */}
-                                    <div className="flex flex-col justify-between items-end gap-3 min-w-[100px]">
+                                    <div className="flex flex-col justify-between items-end sm:items-center gap-3 min-w-[80px]">
                                         <Button
                                             variant="ghost"
                                             size="2"
                                             colorVariant="gray"
                                             onClick={() => removeFromCart(item.productId._id)}
-                                            className="h-9 w-6 p-0 self-end cursor-pointer"
+                                            className="h-9 w-6 p-0 self-end sm:self-center cursor-pointer"
                                         >
                                             <Trash2 size={16} />
                                         </Button>
-                                        <span className="text-green-400 font-semibold text-lg self-end">
+                                        <span className="text-green-400 font-semibold text-lg sm:self-center">
                                             ₹{item.quantity * item.productId.price}
                                         </span>
                                     </div>
@@ -309,10 +350,7 @@ function EmptyState({ message }: { message: string }) {
     return (
         <div className="min-h-screen bg-black text-white flex flex-col items-center justify-center text-muted-foreground text-center px-6 space-y-4">
             <p className="text-lg">{message}</p>
-            <Link
-                href="/menu"
-                className="bg-white text-black px-5 py-2 rounded hover:bg-gray-200 transition"
-            >
+            <Link href="/menu" className="bg-white text-black px-5 py-2 rounded hover:bg-gray-200 transition">
                 Go to Menu 🍕
             </Link>
         </div>

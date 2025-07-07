@@ -15,7 +15,7 @@ export default function ClientProviders({ children }: { children: ReactNode }) {
       <AuthProvider>
         <ReactQueryProvider>
           <ToastProvider>
-            <GlobalSpinner />
+            {/* <GlobalSpinner /> */}
             <RazorpayScriptLoader />
             <AppClientWrapper>
               {children}
