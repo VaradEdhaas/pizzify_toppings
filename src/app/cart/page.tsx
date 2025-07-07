@@ -114,7 +114,7 @@ export default function CartPage() {
                                 }
                             });
                             clearCartMutation();
-                            router.push("/cart");
+                            router.push("/orders");
                         } else {
                             toast.error("Payment verification failed");
                         }
@@ -175,6 +175,8 @@ export default function CartPage() {
         },
     ];
 
+    const isCartEmpty = (cart?.products?.length || 0) === 0;
+
     if (isLoading) {
         return (
             <DynamicBackgroundWrapper>
@@ -212,7 +214,6 @@ export default function CartPage() {
                         ))}
                     </div>
 
-                    {/* Right Side - Order Summary Skeleton */}
                     <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-xl p-6 h-fit shadow-lg">
                         <Skeleton className="h-6 w-40 mb-4 bg-white/20" />
                         <Separator className="bg-white/10 mb-4" />
@@ -225,9 +226,12 @@ export default function CartPage() {
         );
     }
 
+    if (isCartEmpty) {
+        return <EmptyState message="Your cart is empty. Start adding some delicious pizzas!" />;
+    }
+
     return (
         <DynamicBackgroundWrapper>
-            {/* Hero Section */}
             <section className="pt-20 pb-16 px-8">
                 <div className="max-w-7xl mx-auto text-center">
                     <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }}>
@@ -244,9 +248,7 @@ export default function CartPage() {
                 </div>
             </section>
 
-            {/* Cart Content */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-10 max-w-7xl mx-auto mb-15">
-                {/* Left - Cart Items */}
                 <div className="md:col-span-2 space-y-5" ref={cartRef}>
                     {(cart?.products || []).map((item) =>
                         item.productId ? (
@@ -311,22 +313,23 @@ export default function CartPage() {
                     )}
                 </div>
 
-                {/* Right - Summary */}
-                <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-xl p-6 h-fit shadow-lg">
-                    <h2 className="text-xl font-semibold mb-4 text-white">Order Summary</h2>
-                    <Separator className="bg-white/10 mb-4" />
-                    <div className="flex justify-between text-sm text-white/70 mb-2">
-                        <span>Total Items</span>
-                        <span>{cart?.products.length}</span>
+                {!isCartEmpty && (
+                    <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-xl p-6 h-fit shadow-lg">
+                        <h2 className="text-xl font-semibold mb-4 text-white">Order Summary</h2>
+                        <Separator className="bg-white/10 mb-4" />
+                        <div className="flex justify-between text-sm text-white/70 mb-2">
+                            <span>Total Items</span>
+                            <span>{(cart?.products || []).length}</span>
+                        </div>
+                        <div className="flex justify-between text-base font-semibold text-green-400 mb-6">
+                            <span>Total Price</span>
+                            <span>₹{getTotalPrice()}</span>
+                        </div>
+                        <Button onClick={handleCheckout} variant="classic" colorVariant="gray" className="w-full cursor-pointer">
+                            Checkout
+                        </Button>
                     </div>
-                    <div className="flex justify-between text-base font-semibold text-green-400 mb-6">
-                        <span>Total Price</span>
-                        <span>₹{getTotalPrice()}</span>
-                    </div>
-                    <Button onClick={handleCheckout} variant="classic" colorVariant="gray" className="w-full cursor-pointer">
-                        Checkout
-                    </Button>
-                </div>
+                )}
             </div>
         </DynamicBackgroundWrapper>
     );
