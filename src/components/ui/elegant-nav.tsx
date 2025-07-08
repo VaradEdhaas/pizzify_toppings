@@ -1,5 +1,6 @@
 "use client";
 
+import * as React from "react"
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Menu, X, User } from "lucide-react";
@@ -8,6 +9,7 @@ import { useRouter } from "next/navigation";
 import apiService from "@/helper/apiService";
 import { toast } from "react-toastify";
 import { Button } from "@heroui/react";
+import { ModeToggle } from "../theme-toggle";
 
 const navItems = [
   { name: "Menu", link: "/menu" },
@@ -33,7 +35,8 @@ export function ElegantNav() {
       router.push("/login");
       toast.success("Logged out successfully. See you next time!")
     } catch (error) {
-      await console.error("Logout failed:", error);
+      console.error("Logout failed:", error);
+      toast.error("Logout failed.");
     } finally {
       setProfileMenuOpen(false);
       setMobileMenuOpen(false);
@@ -61,7 +64,8 @@ export function ElegantNav() {
             ))}
           </div>
 
-          <div className="hidden md:block relative">
+          <div className="hidden md:flex items-center gap-4 relative">
+            <ModeToggle />
             <Button
               isIconOnly
               variant="light"
@@ -77,7 +81,7 @@ export function ElegantNav() {
                   initial={{ opacity: 0, y: -10 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -10 }}
-                  className="absolute right-0 mt-2 w-48 bg-black/80 border border-white/10 backdrop-blur-xl rounded-xl shadow-xl overflow-hidden"
+                  className="absolute right-0 top-full mt-2 w-48 bg-black/80 border border-white/10 backdrop-blur-xl rounded-xl shadow-xl overflow-hidden"
                 >
                   <Button
                     as={Link}
@@ -155,6 +159,9 @@ export function ElegantNav() {
                   {item.name}
                 </Link>
               ))}
+              <div>
+                <ModeToggle />
+              </div>
               <div className="pt-6 border-t border-white/10 space-y-4">
                 <Button
                   as={Link}

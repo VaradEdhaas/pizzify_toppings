@@ -2,12 +2,12 @@
 
 import { AuthProvider } from "@/components/context/AuthContext";
 import ToastProvider from "./ToastProvider";
-import GlobalSpinner from "@/components/GlobalSpinner";
 import RazorpayScriptLoader from "@/components/RazorpayScriptLoader";
 import AppClientWrapper from "./ShowElegantNav";
 import { ReactNode } from "react";
 import ReactQueryProvider from "./ReactQueryProvider";
 import { HeroUIProvider } from "@heroui/react";
+import { ThemeProvider } from "@/components/theme-provider";
 
 export default function ClientProviders({ children }: { children: ReactNode }) {
   return (
@@ -15,10 +15,16 @@ export default function ClientProviders({ children }: { children: ReactNode }) {
       <AuthProvider>
         <ReactQueryProvider>
           <ToastProvider>
-            {/* <GlobalSpinner /> */}
             <RazorpayScriptLoader />
             <AppClientWrapper>
-              {children}
+              <ThemeProvider
+                attribute="class"
+                defaultTheme="system"
+                enableSystem
+                disableTransitionOnChange
+              >
+                {children}
+              </ThemeProvider>
             </AppClientWrapper>
           </ToastProvider>
         </ReactQueryProvider>
